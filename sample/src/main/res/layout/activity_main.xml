@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingLeft="@dimen/activity_horizontal_margin"
+             android:paddingRight="@dimen/activity_horizontal_margin"
+             tools:context=".MainActivity">
+
+    <com.greenfrvr.hashtagview.HashtagView
+        android:id="@+id/hashtag_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:itemBackground="@drawable/rounded_rect"
+        app:itemForeground="@drawable/flat_button_light"
+        app:itemMinWidth="48dp"
+        app:itemPaddingBottom="8dp"
+        app:itemPaddingLeft="6dp"
+        app:itemPaddingRight="6dp"
+        app:itemPaddingTop="8dp"
+        app:itemTextColor="#E5E5E5"/>
+
+</FrameLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="HashtagView">
+        <attr name="itemTextColor" format="color"/>
+        <attr name="itemBackground" format="color|reference"/>
+        <attr name="itemForeground" format="color|reference"/>
+        <attr name="itemMargin" format="dimension"/>
+        <attr name="itemPaddingLeft" format="dimension"/>
+        <attr name="itemPaddingRight" format="dimension"/>
+        <attr name="itemPaddingTop" format="dimension"/>
+        <attr name="itemPaddingBottom" format="dimension"/>
+        <attr name="itemMinWidth" format="dimension"/>
+        <attr name="rowMargin" format="dimension"/>
+    </declare-styleable>
+
+</resources>
