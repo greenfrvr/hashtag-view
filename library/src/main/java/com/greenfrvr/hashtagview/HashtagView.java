@@ -3,6 +3,9 @@ package com.greenfrvr.hashtagview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -50,7 +53,6 @@ public class HashtagView<T> extends LinearLayout {
     private int itemPaddingRight;
     private int itemPaddingTop;
     private int itemPaddingBottom;
-    private int itemTotalOffset;
     private int minItemWidth;
     private int itemTextColor;
     private int itemTextGravity;
@@ -106,8 +108,6 @@ public class HashtagView<T> extends LinearLayout {
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_itemForeground, 0);
 
             itemTextColor = a.getColor(R.styleable.HashtagView_itemTextColor, Color.BLACK);
-
-            itemTotalOffset = itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
         } finally {
             a.recycle();
         }
@@ -145,6 +145,8 @@ public class HashtagView<T> extends LinearLayout {
 
     public void wrap() {
         if (data == null || data.isEmpty()) return;
+
+        int itemTotalOffset = itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
 
         for (ItemData item : data) {
             View view = inflateTagView(item);
@@ -218,7 +220,7 @@ public class HashtagView<T> extends LinearLayout {
 
     private View inflateTagView(final ItemData item) {
         ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
-        ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
+        if(foregroundDrawable != 0) ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
         itemLayout.setBackgroundResource(backgroundDrawable);
         itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
         itemLayout.setMinimumWidth(minItemWidth);
@@ -247,6 +249,84 @@ public class HashtagView<T> extends LinearLayout {
         itemParams.rightMargin = rowMargin;
         itemParams.weight = rowMode;
         return itemParams;
+    }
+
+    public void setItemMargin(int itemMargin) {
+        this.itemMargin = itemMargin;
+    }
+
+    public void setItemMarginRes(@DimenRes int marginRes) {
+        this.itemMargin = getResources().getDimensionPixelOffset(marginRes);
+    }
+
+    public void setItemPadding(int left, int right, int top, int bottom) {
+        this.itemPaddingLeft = left;
+        this.itemPaddingRight = right;
+        this.itemPaddingTop = top;
+        this.itemPaddingBottom = bottom;
+    }
+
+    public void setItemPaddingRes(@DimenRes int left, @DimenRes int right, @DimenRes int top, @DimenRes int bottom) {
+        this.itemPaddingLeft = getResources().getDimensionPixelOffset(left);
+        this.itemPaddingRight = getResources().getDimensionPixelOffset(right);
+        this.itemPaddingTop = getResources().getDimensionPixelOffset(top);
+        this.itemPaddingBottom = getResources().getDimensionPixelOffset(bottom);
+    }
+
+    public void setMinItemWidth(int minWidth) {
+        this.minItemWidth = minWidth;
+    }
+
+    public void setMinItemWidthRes(@DimenRes int minWidth) {
+        this.minItemWidth = getResources().getDimensionPixelOffset(minWidth);
+    }
+
+    public void setItemTextColor(int textColor) {
+        this.itemTextColor = textColor;
+    }
+
+    public void setItemTextColorRes(@ColorRes int textColor) {
+        this.itemTextColor = getResources().getColor(textColor);
+    }
+
+    public void setItemTextGravity(int itemTextGravity) {
+        this.itemTextGravity = itemTextGravity;
+    }
+
+    public void setItemTextSize(float textSize) {
+        this.itemTextSize = textSize;
+    }
+
+    public void setItemTextSizeRes(@DimenRes int textSize) {
+        this.itemTextSize = getResources().getDimension(textSize);
+    }
+
+    public void setRowMargin(int rowMargin) {
+        this.rowMargin = rowMargin;
+    }
+
+    public void setRowMarginRes(@DimenRes int rowMargin) {
+        this.rowMargin = getResources().getDimensionPixelOffset(rowMargin);
+    }
+
+    public void setRowGravity(int rowGravity) {
+        this.rowGravity = rowGravity;
+    }
+
+    public void setRowMode(int rowMode) {
+        this.rowMode = rowMode;
+    }
+
+    public void setBackgroundDrawable(@DrawableRes int backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
+    }
+
+    public void setBackgroundColor(@ColorRes int backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
+    }
+
+    public void setForegroundDrawable(@DrawableRes int foregroundDrawable) {
+        this.foregroundDrawable = foregroundDrawable;
     }
 
     public class ItemData<T> {
