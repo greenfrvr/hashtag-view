@@ -3,12 +3,15 @@ package com.greenfrvr.hashtagview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +31,13 @@ import timber.log.Timber;
  */
 public class HashtagView<T> extends LinearLayout {
 
+    public static final int GRAVITY_LEFT = Gravity.LEFT;
+    public static final int GRAVITY_RIGHT = Gravity.RIGHT;
+    public static final int GRAVITY_CENTER = Gravity.CENTER;
+
+    public static final int MODE_STRETCH = 1;
+    public static final int MODE_WRAP = 0;
+
     private final LayoutParams rowParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
     private TagsClickListener listener;
@@ -41,10 +51,14 @@ public class HashtagView<T> extends LinearLayout {
     private int itemPaddingTop;
     private int itemPaddingBottom;
     private int itemTotalOffset;
-    private int itemTextColor;
     private int minItemWidth;
+    private int itemTextColor;
+    private int itemTextGravity;
+    private float itemTextSize;
 
     private int rowMargin;
+    private int rowGravity;
+    private int rowMode;
     private int backgroundDrawable;
     private int foregroundDrawable;
 
@@ -82,6 +96,11 @@ public class HashtagView<T> extends LinearLayout {
             itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_itemPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
             minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_itemMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
             rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
+            itemTextSize = a.getDimension(R.styleable.HashtagView_itemTextSize, getResources().getDimension(R.dimen.default_text_size));
+
+            itemTextGravity = a.getInt(R.styleable.HashtagView_itemTextGravity, Gravity.CENTER);
+            rowMode = a.getInt(R.styleable.HashtagView_rowMode, 0);
+            rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_itemBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_itemForeground, 0);
@@ -133,6 +152,11 @@ public class HashtagView<T> extends LinearLayout {
             TextView textView = (TextView) view.findViewById(R.id.text);
             textView.setText(item.title);
             textView.setTextColor(itemTextColor);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
+
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = itemTextGravity;
+            textView.setLayoutParams(params);
 
             float width = textView.getPaint().measureText(item.title) + itemTotalOffset;
             width = Math.max(width, minItemWidth);
@@ -180,6 +204,7 @@ public class HashtagView<T> extends LinearLayout {
             rowLayout.setGravity(Gravity.CENTER);
             rowLayout.setOrientation(HORIZONTAL);
             rowLayout.setLayoutParams(rowParams);
+            rowLayout.setGravity(rowGravity);
             rowLayout.setWeightSum(viewMap.get(key).size());
             addView(rowLayout);
 
@@ -192,10 +217,12 @@ public class HashtagView<T> extends LinearLayout {
     }
 
     private View inflateTagView(final ItemData item) {
-        View itemLayout = LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
-//        ((FrameLayout) itemLayout).setForeground(getResources().getDrawable(foregroundDrawable, getContext().getTheme()));
+        ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
+        ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
         itemLayout.setBackgroundResource(backgroundDrawable);
         itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
+        itemLayout.setMinimumWidth(minItemWidth);
+
         itemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,10 +245,9 @@ public class HashtagView<T> extends LinearLayout {
         itemParams.topMargin = itemMargin;
         itemParams.leftMargin = rowMargin;
         itemParams.rightMargin = rowMargin;
-        itemParams.weight = 1;
+        itemParams.weight = rowMode;
         return itemParams;
     }
-
 
     public class ItemData<T> {
         protected T data;

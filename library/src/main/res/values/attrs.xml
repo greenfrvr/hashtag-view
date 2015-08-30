@@ -3,6 +3,12 @@
 
     <declare-styleable name="HashtagView">
         <attr name="itemTextColor" format="color"/>
+        <attr name="itemTextSize" format="dimension"/>
+        <attr name="itemTextGravity" format="enum">
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+            <enum name="center" value="17"/>
+        </attr>
         <attr name="itemBackground" format="color|reference"/>
         <attr name="itemForeground" format="color|reference"/>
         <attr name="itemMargin" format="dimension"/>
@@ -12,6 +18,15 @@
         <attr name="itemPaddingBottom" format="dimension"/>
         <attr name="itemMinWidth" format="dimension"/>
         <attr name="rowMargin" format="dimension"/>
+        <attr name="rowGravity" format="enum">
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+            <enum name="center" value="17"/>
+        </attr>
+        <attr name="rowMode" format="enum">
+            <enum name="wrap" value="0"/>
+            <enum name="stretch" value="1"/>
+        </attr>
     </declare-styleable>
 
 </resources>
