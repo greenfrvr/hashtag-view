@@ -27,6 +27,7 @@
             <enum name="wrap" value="0"/>
             <enum name="stretch" value="1"/>
         </attr>
+        <attr name="selectionMode" format="boolean"/>
     </declare-styleable>
 
 </resources>

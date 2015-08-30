@@ -22,6 +22,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ import timber.log.Timber;
 /**
  * Created by greenfrvr
  */
-public class HashtagView<T> extends LinearLayout {
+public class HashtagView extends LinearLayout {
 
     public static final int GRAVITY_LEFT = Gravity.LEFT;
     public static final int GRAVITY_RIGHT = Gravity.RIGHT;
@@ -42,8 +43,10 @@ public class HashtagView<T> extends LinearLayout {
     public static final int MODE_WRAP = 0;
 
     private final LayoutParams rowParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private final ItemComparator comparator = new ItemComparator();
 
-    private TagsClickListener listener;
+    private TagsClickListener clickListener;
+    private TagsSelectListener selectListener;
 
     private List<ItemData> data;
     private Multimap<Integer, ItemData> viewMap;
@@ -65,6 +68,8 @@ public class HashtagView<T> extends LinearLayout {
     private int foregroundDrawable;
 
     private float totalItemsWidth = 0;
+
+    private boolean isInSelectMode;
 
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
@@ -101,13 +106,15 @@ public class HashtagView<T> extends LinearLayout {
             itemTextSize = a.getDimension(R.styleable.HashtagView_itemTextSize, getResources().getDimension(R.dimen.default_text_size));
 
             itemTextGravity = a.getInt(R.styleable.HashtagView_itemTextGravity, Gravity.CENTER);
-            rowMode = a.getInt(R.styleable.HashtagView_rowMode, 0);
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
+            rowMode = a.getInt(R.styleable.HashtagView_rowMode, 0);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_itemBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_itemForeground, 0);
 
             itemTextColor = a.getColor(R.styleable.HashtagView_itemTextColor, Color.BLACK);
+
+            isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
         } finally {
             a.recycle();
         }
@@ -118,29 +125,29 @@ public class HashtagView<T> extends LinearLayout {
         for (String item : list) {
             data.add(new ItemData<>(item));
         }
-        Collections.sort(data, new Comparator<ItemData>() {
-            @Override
-            public int compare(ItemData lhs, ItemData rhs) {
-                return lhs.title.compareTo(rhs.title);
-            }
-        });
     }
 
-    public void setData(List<T> list, DataTransform<T> transformer) {
+    public <T> void setData(List<T> list, DataTransform<T> transformer) {
         data = new ArrayList<>(list.size());
         for (T item : list) {
             data.add(new ItemData<>(item, transformer.prepare(item)));
         }
-        Collections.sort(data, new Comparator<ItemData>() {
-            @Override
-            public int compare(ItemData lhs, ItemData rhs) {
-                return lhs.title.compareTo(rhs.title);
-            }
-        });
+    }
+
+    public List<Object> getSelectedItems() {
+        List<Object> selected = new ArrayList<>();
+        for (ItemData item : viewMap.values()) {
+            if (item.isSelected) selected.add(item.data != null ? item.data : item.title);
+        }
+        return selected;
     }
 
     public void setOnTagClickListener(TagsClickListener listener) {
-        this.listener = listener;
+        this.clickListener = listener;
+    }
+
+    public void setOnTagSelectListener(TagsSelectListener listener) {
+        this.selectListener = listener;
     }
 
     public void wrap() {
@@ -167,9 +174,13 @@ public class HashtagView<T> extends LinearLayout {
 
             totalItemsWidth += width;
         }
+        Collections.sort(data, comparator);
+        Timber.i(Arrays.toString(data.toArray()));
     }
 
     public void sort() {
+        if (data == null || data.isEmpty()) return;
+
         int rowsCount = (int) Math.ceil(totalItemsWidth / (getWidth() - getPaddingLeft() - getPaddingRight()));
         final int[] rowsWidth = new int[rowsCount];
         Timber.i("Total items width is %f, and width of widget is %d", totalItemsWidth, (getWidth() - getPaddingLeft() - getPaddingRight()));
@@ -189,7 +200,7 @@ public class HashtagView<T> extends LinearLayout {
                         Timber.i("Tag with width %f fits", item.width);
                         rowsWidth[i] += item.width;
                         viewMap.put(i, item);
-                        data.remove(item);
+                        data.remove(data.indexOf(item));
                         continue rowIteration;
                     }
                 }
@@ -220,33 +231,57 @@ public class HashtagView<T> extends LinearLayout {
 
     private View inflateTagView(final ItemData item) {
         ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
-        if(foregroundDrawable != 0) ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
         itemLayout.setBackgroundResource(backgroundDrawable);
         itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
         itemLayout.setMinimumWidth(minItemWidth);
+        if (foregroundDrawable != 0)
+            ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
 
         itemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Timber.i("Item clicked");
-                if (listener != null) {
-                    if (item.data == null) {
-                        listener.onItemClicked(item.title);
-                    } else {
-                        listener.onItemClicked(item.data);
-                    }
+                if (isInSelectMode) {
+                    handleSelection(item);
+                } else {
+                    handleClick(item);
                 }
             }
         });
         return itemLayout;
     }
 
+    private void handleSelection(ItemData item) {
+        item.select();
+        if (selectListener != null) {
+            if (item.data == null) {
+                selectListener.onItemSelected(item.title);
+            } else {
+                selectListener.onItemSelected(item.data);
+            }
+        }
+
+        for (ItemData it : viewMap.values()) {
+            Timber.i("Item %1$s %2$s selected", it.title, it.isSelected ? "is" : "is not");
+        }
+    }
+
+    private void handleClick(ItemData item) {
+        if (clickListener != null) {
+            if (item.data == null) {
+                clickListener.onItemClicked(item.title);
+            } else {
+                clickListener.onItemClicked(item.data);
+            }
+        }
+    }
+
     private LayoutParams getItemLayoutParams() {
         LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemParams.bottomMargin = itemMargin;
-        itemParams.topMargin = itemMargin;
-        itemParams.leftMargin = rowMargin;
-        itemParams.rightMargin = rowMargin;
+        itemParams.bottomMargin = rowMargin;
+        itemParams.topMargin = rowMargin;
+        itemParams.leftMargin = itemMargin;
+        itemParams.rightMargin = itemMargin;
         itemParams.weight = rowMode;
         return itemParams;
     }
@@ -329,9 +364,14 @@ public class HashtagView<T> extends LinearLayout {
         this.foregroundDrawable = foregroundDrawable;
     }
 
-    public class ItemData<T> {
+    public void setInSelectMode(boolean selectMode) {
+        isInSelectMode = selectMode;
+    }
+
+    private class ItemData<T> {
         protected T data;
         protected String title;
+        protected boolean isSelected;
 
         protected View view;
         protected float width;
@@ -344,10 +384,34 @@ public class HashtagView<T> extends LinearLayout {
             this.data = data;
             this.title = title;
         }
+
+        public void select() {
+            isSelected = !isSelected;
+            view.setSelected(isSelected);
+            view.invalidate();
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Item data: title - %s, width - %f", title, width);
+        }
+    }
+
+    private class ItemComparator implements Comparator<ItemData> {
+        @Override
+        public int compare(ItemData lhs, ItemData rhs) {
+            if (lhs == null || rhs == null) return 0;
+
+            return lhs.width > rhs.width ? -1 : (lhs.width == rhs.width ? 0 : 1);
+        }
     }
 
     public interface TagsClickListener {
         void onItemClicked(Object item);
+    }
+
+    public interface TagsSelectListener {
+        void onItemSelected(Object item);
     }
 
     public interface DataTransform<T> {
