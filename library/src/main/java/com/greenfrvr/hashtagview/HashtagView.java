@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import timber.log.Timber;
@@ -48,6 +47,7 @@ public class HashtagView extends LinearLayout {
     private TagsClickListener clickListener;
     private TagsSelectListener selectListener;
 
+    private List<Float> widthList;
     private List<ItemData> data;
     private Multimap<Integer, ItemData> viewMap;
 
@@ -121,6 +121,7 @@ public class HashtagView extends LinearLayout {
     }
 
     public void setData(List<String> list) {
+        widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
         for (String item : list) {
             data.add(new ItemData<>(item));
@@ -128,6 +129,7 @@ public class HashtagView extends LinearLayout {
     }
 
     public <T> void setData(List<T> list, DataTransform<T> transformer) {
+        widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
         for (T item : list) {
             data.add(new ItemData<>(item, transformer.prepare(item)));
@@ -171,36 +173,61 @@ public class HashtagView extends LinearLayout {
             width = Math.max(width, minItemWidth);
             item.view = view;
             item.width = width;
+            widthList.add(width);
 
             totalItemsWidth += width;
         }
+
         Collections.sort(data, comparator);
+        Collections.sort(widthList, Collections.reverseOrder());
         Timber.i(Arrays.toString(data.toArray()));
+    }
+
+    private int evaluateRowsQuantity() {
+        if (widthList == null || widthList.isEmpty()) return 0;
+
+        Timber.i("Total items width is %f, and width of widget is %d", totalItemsWidth, getViewWidth());
+        int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
+        int[] rowsWidth = new int[rows];
+        int iterationLimit = rows + widthList.size();
+
+        int counter = 0;
+        while (!widthList.isEmpty()) {
+            rowIteration:
+            for (int i = 0; i < rows; i++) {
+                if (counter > iterationLimit)
+                    return rows + 1;
+
+                counter++;
+                for (Float item : widthList) {
+                    if (rowsWidth[i] + item < getWidth()) {
+                        rowsWidth[i] += item;
+                        widthList.remove(item);
+                        continue rowIteration;
+                    }
+                }
+            }
+        }
+        return rows;
     }
 
     public void sort() {
         if (data == null || data.isEmpty()) return;
 
-        int rowsCount = (int) Math.ceil(totalItemsWidth / (getWidth() - getPaddingLeft() - getPaddingRight()));
-        final int[] rowsWidth = new int[rowsCount];
-        Timber.i("Total items width is %f, and width of widget is %d", totalItemsWidth, (getWidth() - getPaddingLeft() - getPaddingRight()));
-        Timber.i("Rows count - %d", rowsCount);
+        int rowsQuantity = evaluateRowsQuantity();
+        final int[] rowsWidth = new int[rowsQuantity];
+        Timber.i("Rows count - %d", rowsQuantity);
 
-        viewMap = ArrayListMultimap.create(rowsCount, data.size());
+        viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
+
         while (!data.isEmpty()) {
             rowIteration:
-            for (int i = 0; i < rowsCount; i++) {
-                Iterator<ItemData> iterator = data.iterator();
-
-                while (iterator.hasNext()) {
-                    ItemData item = iterator.next();
-                    Timber.i("Row width %1$f, total width - %2$d", rowsWidth[i] + item.width, getWidth());
-
-                    if (rowsWidth[i] + item.width < getWidth()) {
-                        Timber.i("Tag with width %f fits", item.width);
+            for (int i = 0; i < rowsQuantity; i++) {
+                for (ItemData item : data) {
+                    if (rowsWidth[i] + item.width < getViewWidth()) {
                         rowsWidth[i] += item.width;
                         viewMap.put(i, item);
-                        data.remove(data.indexOf(item));
+                        data.remove(item);
                         continue rowIteration;
                     }
                 }
@@ -227,6 +254,10 @@ public class HashtagView extends LinearLayout {
                 rowLayout.addView(item.view, getItemLayoutParams());
             }
         }
+    }
+
+    private int getViewWidth() {
+        return getWidth() - getPaddingLeft() - getPaddingRight();
     }
 
     private View inflateTagView(final ItemData item) {
