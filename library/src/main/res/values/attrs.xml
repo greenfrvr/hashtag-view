@@ -11,6 +11,9 @@
         </attr>
         <attr name="tagBackground" format="color|reference"/>
         <attr name="tagForeground" format="color|reference"/>
+        <attr name="tagDrawableLeft" format="reference"/>
+        <attr name="tagDrawableRight" format="reference"/>
+        <attr name="tagDrawablePadding" format="dimension"/>
         <attr name="tagMargin" format="dimension"/>
         <attr name="tagPaddingLeft" format="dimension"/>
         <attr name="tagPaddingRight" format="dimension"/>

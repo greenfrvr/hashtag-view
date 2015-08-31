@@ -3,6 +3,8 @@ package com.greenfrvr.hashtagview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
@@ -56,6 +58,7 @@ public class HashtagView extends LinearLayout {
     private int itemPaddingRight;
     private int itemPaddingTop;
     private int itemPaddingBottom;
+    private int itemDrawablePadding;
     private int minItemWidth;
     private int itemTextColor;
     private int itemTextGravity;
@@ -66,6 +69,10 @@ public class HashtagView extends LinearLayout {
     private int rowMode;
     private int backgroundDrawable;
     private int foregroundDrawable;
+    private int leftDrawable;
+    private int rightDrawable;
+
+    private Typeface typeface;
 
     private float totalItemsWidth = 0;
 
@@ -101,6 +108,7 @@ public class HashtagView extends LinearLayout {
             itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
             itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
             itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemDrawablePadding = a.getDimensionPixelOffset(R.styleable.HashtagView_tagDrawablePadding, 0);
             minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
             rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
             itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
@@ -111,6 +119,8 @@ public class HashtagView extends LinearLayout {
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
+            leftDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableLeft, 0);
+            rightDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableRight, 0);
 
             itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
 
@@ -155,8 +165,6 @@ public class HashtagView extends LinearLayout {
     public void wrap() {
         if (data == null || data.isEmpty()) return;
 
-        int itemTotalOffset = itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
-
         for (ItemData item : data) {
             View view = inflateTagView(item);
 
@@ -164,12 +172,15 @@ public class HashtagView extends LinearLayout {
             textView.setText(item.title);
             textView.setTextColor(itemTextColor);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
+            textView.setCompoundDrawablePadding(itemDrawablePadding);
+            textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
+            if (typeface != null) textView.setTypeface(typeface);
 
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = itemTextGravity;
             textView.setLayoutParams(params);
 
-            float width = textView.getPaint().measureText(item.title) + itemTotalOffset;
+            float width = textView.getPaint().measureText(item.title) + drawableMetrics(textView) + totalOffset();
             width = Math.max(width, minItemWidth);
             item.view = view;
             item.width = width;
@@ -181,6 +192,18 @@ public class HashtagView extends LinearLayout {
         Collections.sort(data, comparator);
         Collections.sort(widthList, Collections.reverseOrder());
         Timber.i(Arrays.toString(data.toArray()));
+    }
+
+    private int totalOffset() {
+        return itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
+    }
+
+    private int drawableMetrics(TextView textView) {
+        int drawablesWidth = 0;
+        Drawable[] drawables = textView.getCompoundDrawables();
+        drawablesWidth += drawables[0] != null ? drawables[0].getIntrinsicWidth() + itemDrawablePadding : 0;
+        drawablesWidth += drawables[2] != null ? drawables[2].getIntrinsicWidth() + itemDrawablePadding : 0;
+        return drawablesWidth;
     }
 
     private int evaluateRowsQuantity() {
@@ -397,6 +420,10 @@ public class HashtagView extends LinearLayout {
 
     public void setInSelectMode(boolean selectMode) {
         isInSelectMode = selectMode;
+    }
+
+    public void setTypeface(Typeface typeface) {
+        this.typeface = typeface;
     }
 
     private class ItemData<T> {
