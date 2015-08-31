@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:paddingBottom="10dp"
+             android:paddingLeft="16dp"
+             android:paddingRight="16dp"
+             android:paddingTop="10dp">
+
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.greenfrvr.hashtagview.HashtagView
+            android:id="@+id/hashtags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@drawable/rounded_rect_1"
+            app:itemForeground="@drawable/flat_button_light"
+            app:itemPaddingBottom="8dp"
+            app:itemPaddingLeft="6dp"
+            app:itemPaddingRight="6dp"
+            app:itemPaddingTop="8dp"
+            app:itemTextColor="#E5E5E5"
+            app:itemTextGravity="right"
+            app:itemTextSize="16sp"
+            app:rowGravity="center"
+            app:rowMode="wrap"/>
+
+    </LinearLayout>
+
+    <!--</android.support.v7.widget.CardView>-->
+
+</FrameLayout>
