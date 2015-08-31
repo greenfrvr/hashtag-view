@@ -5,4 +5,33 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="FlatButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/flat_button_height</item>
+        <item name="android:minWidth">@dimen/flat_button_width</item>
+        <item name="android:paddingLeft">@dimen/flat_button_padding</item>
+        <item name="android:paddingRight">@dimen/flat_button_padding</item>
+        <item name="android:textSize">@dimen/regular_text</item>
+        <item name="android:background">@drawable/flat_button_dark</item>
+    </style>
+
+    <style name="Section"/>
+
+    <style name="Section.Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+
+    <style name="Section.Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rounded_rect_reverse</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
 </resources>

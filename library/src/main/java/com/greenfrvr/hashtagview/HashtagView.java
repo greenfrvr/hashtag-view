@@ -96,23 +96,23 @@ public class HashtagView extends LinearLayout {
     private void extractAttributes(AttributeSet attrs) {
         TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.HashtagView, 0, 0);
         try {
-            itemMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_itemMargin, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            itemPaddingLeft = a.getDimensionPixelOffset(R.styleable.HashtagView_itemPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_itemPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_itemPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_itemPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_itemMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
+            itemMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMargin, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemPaddingLeft = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
             rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
-            itemTextSize = a.getDimension(R.styleable.HashtagView_itemTextSize, getResources().getDimension(R.dimen.default_text_size));
+            itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
 
-            itemTextGravity = a.getInt(R.styleable.HashtagView_itemTextGravity, Gravity.CENTER);
+            itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, 0);
 
-            backgroundDrawable = a.getResourceId(R.styleable.HashtagView_itemBackground, 0);
-            foregroundDrawable = a.getResourceId(R.styleable.HashtagView_itemForeground, 0);
+            backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
+            foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
 
-            itemTextColor = a.getColor(R.styleable.HashtagView_itemTextColor, Color.BLACK);
+            itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
 
             isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
         } finally {

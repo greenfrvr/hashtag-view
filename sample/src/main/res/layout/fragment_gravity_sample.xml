@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingLeft="10dp"
+             android:paddingRight="10dp">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:overScrollMode="never"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:scrollbars="none">
+
+        <android.support.v7.widget.CardView
+            style="@style/Card"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="48dp"
+                    android:paddingRight="48dp"
+                    android:text="Play with the gravity as you want"
+                    android:textColor="@android:color/primary_text_light"
+                    android:textSize="18sp"/>
+
+                <FrameLayout
+                    style="@style/Section.Container"
+                    android:paddingLeft="4dp">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:layout_gravity="left"
+                        android:text="Left"/>
+                </FrameLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="4dp"
+                    app:rowGravity="left"
+                    app:rowMode="wrap"
+                    app:tagBackground="@drawable/rounded_rect_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="8dp"
+                    app:tagPaddingLeft="6dp"
+                    app:tagPaddingRight="6dp"
+                    app:tagPaddingTop="8dp"
+                    app:tagTextColor="#E5E5E5"
+                    app:tagTextGravity="right"
+                    app:tagTextSize="14sp"/>
+
+                <FrameLayout style="@style/Section.Container">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Center"/>
+                </FrameLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="4dp"
+                    app:rowGravity="center"
+                    app:rowMode="wrap"
+                    app:tagBackground="@drawable/rounded_rect_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="8dp"
+                    app:tagPaddingLeft="6dp"
+                    app:tagPaddingRight="6dp"
+                    app:tagPaddingTop="8dp"
+                    app:tagTextColor="#E5E5E5"
+                    app:tagTextGravity="right"
+                    app:tagTextSize="14sp"/>
+
+                <FrameLayout
+                    style="@style/Section.Container"
+                    android:paddingRight="4dp">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:layout_gravity="right"
+                        android:text="Right"/>
+                </FrameLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="4dp"
+                    app:rowGravity="right"
+                    app:rowMode="wrap"
+                    app:tagBackground="@drawable/rounded_rect_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="8dp"
+                    app:tagPaddingLeft="6dp"
+                    app:tagPaddingRight="6dp"
+                    app:tagPaddingTop="8dp"
+                    app:tagTextColor="#E5E5E5"
+                    app:tagTextGravity="right"
+                    app:tagTextSize="14sp"/>
+
+                <include layout="@layout/layout_buttons"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </ScrollView>
+</FrameLayout>

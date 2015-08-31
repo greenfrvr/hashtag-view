@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Card">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardMaxElevation">4dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">@drawable/flat_button_dark</item>
+    </style>
+
+</resources>

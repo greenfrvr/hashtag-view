@@ -2,21 +2,21 @@
 <resources>
 
     <declare-styleable name="HashtagView">
-        <attr name="itemTextColor" format="color"/>
-        <attr name="itemTextSize" format="dimension"/>
-        <attr name="itemTextGravity" format="enum">
+        <attr name="tagTextColor" format="color"/>
+        <attr name="tagTextSize" format="dimension"/>
+        <attr name="tagTextGravity" format="enum">
             <enum name="left" value="3"/>
             <enum name="right" value="5"/>
             <enum name="center" value="17"/>
         </attr>
-        <attr name="itemBackground" format="color|reference"/>
-        <attr name="itemForeground" format="color|reference"/>
-        <attr name="itemMargin" format="dimension"/>
-        <attr name="itemPaddingLeft" format="dimension"/>
-        <attr name="itemPaddingRight" format="dimension"/>
-        <attr name="itemPaddingTop" format="dimension"/>
-        <attr name="itemPaddingBottom" format="dimension"/>
-        <attr name="itemMinWidth" format="dimension"/>
+        <attr name="tagBackground" format="color|reference"/>
+        <attr name="tagForeground" format="color|reference"/>
+        <attr name="tagMargin" format="dimension"/>
+        <attr name="tagPaddingLeft" format="dimension"/>
+        <attr name="tagPaddingRight" format="dimension"/>
+        <attr name="tagPaddingTop" format="dimension"/>
+        <attr name="tagPaddingBottom" format="dimension"/>
+        <attr name="tagMinWidth" format="dimension"/>
         <attr name="rowMargin" format="dimension"/>
         <attr name="rowGravity" format="enum">
             <enum name="left" value="3"/>

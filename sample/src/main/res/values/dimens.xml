@@ -8,4 +8,10 @@
     <dimen name="row_margin">2dp</dimen>
     <dimen name="padding_horizontal">8dp</dimen>
     <dimen name="padding_vertical">6dp</dimen>
+
+    <dimen name="flat_button_height">36dp</dimen>
+    <dimen name="flat_button_width">64dp</dimen>
+    <dimen name="flat_button_padding">8dp</dimen>
+
+    <dimen name="regular_text">14sp</dimen>
 </resources>
