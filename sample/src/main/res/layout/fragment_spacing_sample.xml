@@ -6,7 +6,6 @@
              android:paddingLeft="10dp"
              android:paddingRight="10dp">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,22 +20,11 @@
             style="@style/Card"
             app:cardUseCompatPadding="true">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+            <LinearLayout style="@style/CardContainer">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="48dp"
-                    android:paddingRight="48dp"
-                    android:text="Control spacing"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="18sp"/>
+                    style="@style/CardTitle"
+                    android:text="Control spacing"/>
 
                 <FrameLayout style="@style/Section.Container">
 
@@ -77,11 +65,11 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="4dp"
                     app:rowGravity="center"
-                    app:rowMargin="2dp"
+                    app:rowMargin="8dp"
                     app:rowMode="wrap"
                     app:tagBackground="@drawable/rounded_rect_1"
                     app:tagForeground="@drawable/flat_button_light"
-                    app:tagMargin="2dp"
+                    app:tagMargin="8dp"
                     app:tagPaddingBottom="8dp"
                     app:tagPaddingLeft="6dp"
                     app:tagPaddingRight="6dp"

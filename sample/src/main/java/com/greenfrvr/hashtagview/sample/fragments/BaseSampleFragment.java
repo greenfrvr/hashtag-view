@@ -26,14 +26,6 @@ public class BaseSampleFragment extends BaseFragment {
     @Bind(R.id.prev_button) Button previousButton;
     @Bind(R.id.hashtags) HashtagView hashtagView;
 
-    public static BaseSampleFragment newInstance() {
-        Bundle args = new Bundle();
-
-        BaseSampleFragment fragment = new BaseSampleFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,11 +38,6 @@ public class BaseSampleFragment extends BaseFragment {
         previousButton.setVisibility(View.GONE);
 
         hashtagView.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
-    }
-
-    @OnClick(R.id.next_button)
-    void nextButtonClicked() {
-        getPagerListener().onNextClicked();
     }
 
 }

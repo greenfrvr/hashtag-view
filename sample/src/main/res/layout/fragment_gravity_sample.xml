@@ -6,7 +6,6 @@
              android:paddingLeft="10dp"
              android:paddingRight="10dp">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,22 +20,11 @@
             style="@style/Card"
             app:cardUseCompatPadding="true">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+            <LinearLayout style="@style/CardContainer">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="48dp"
-                    android:paddingRight="48dp"
-                    android:text="Play with the gravity as you want"
-                    android:textColor="@android:color/primary_text_light"
-                    android:textSize="18sp"/>
+                    style="@style/CardTitle"
+                    android:text="Play with the gravity as you want"/>
 
                 <FrameLayout
                     style="@style/Section.Container"
@@ -44,7 +32,6 @@
 
                     <TextView
                         style="@style/Section.Text"
-                        android:layout_gravity="left"
                         android:text="Left"/>
                 </FrameLayout>
 
@@ -70,7 +57,6 @@
 
                     <TextView
                         style="@style/Section.Text"
-                        android:layout_gravity="center_horizontal"
                         android:text="Center"/>
                 </FrameLayout>
 
@@ -98,7 +84,6 @@
 
                     <TextView
                         style="@style/Section.Text"
-                        android:layout_gravity="right"
                         android:text="Right"/>
                 </FrameLayout>
 

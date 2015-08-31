@@ -26,19 +26,10 @@ public class SpacingSampleFragment extends BaseFragment {
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
     protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
 
-    public static SpacingSampleFragment newInstance() {
-        Bundle args = new Bundle();
-
-        SpacingSampleFragment fragment = new SpacingSampleFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_spacing_sample, container, false);
-
     }
 
     @Override
@@ -49,14 +40,4 @@ public class SpacingSampleFragment extends BaseFragment {
         hashtagView3.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
     }
 
-    @OnClick(R.id.prev_button)
-    void previousButtonClicked() {
-        getPagerListener().onPreviousClicked();
-    }
-
-
-    @OnClick(R.id.next_button)
-    void nextButtonClicked() {
-        getPagerListener().onNextClicked();
-    }
 }

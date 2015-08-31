@@ -1,8 +1,10 @@
 package com.greenfrvr.hashtagview.sample;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.SparseArray;
 
 import com.greenfrvr.hashtagview.sample.fragments.BaseSampleFragment;
 import com.greenfrvr.hashtagview.sample.fragments.EventsSampleFragment;
@@ -15,29 +17,25 @@ import com.greenfrvr.hashtagview.sample.fragments.SpacingSampleFragment;
 public class SamplesAdapter extends FragmentStatePagerAdapter {
 
     private static final int COUNT = 4;
+    private static final SparseArray<String> fragments = new SparseArray<>(COUNT);
 
-    public SamplesAdapter(FragmentManager fm) {
+    static {
+        fragments.append(0, BaseSampleFragment.class.getName());
+        fragments.append(1, GravitySampleFragment.class.getName());
+        fragments.append(2, SpacingSampleFragment.class.getName());
+        fragments.append(3, EventsSampleFragment.class.getName());
+    }
+
+    private Context context;
+
+    public SamplesAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
-        switch (position) {
-            case 0:
-                fragment = BaseSampleFragment.newInstance();
-                break;
-            case 1:
-                fragment = GravitySampleFragment.newInstance();
-                break;
-            case 2:
-                fragment = SpacingSampleFragment.newInstance();
-                break;
-            case 3:
-                fragment = EventsSampleFragment.newInstance();
-                break;
-        }
-        return fragment;
+        return Fragment.instantiate(context, fragments.get(position));
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.greenfrvr.hashtagview.sample.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by greenfrvr
@@ -44,6 +45,17 @@ public abstract class BaseFragment extends Fragment {
 
     protected PagerListener getPagerListener() {
         return listener;
+    }
+
+    @OnClick(R.id.prev_button)
+    void previousButtonClicked() {
+        listener.onPreviousClicked();
+    }
+
+
+    @OnClick(R.id.next_button)
+    void nextButtonClicked() {
+        listener.onNextClicked();
     }
 
     public interface PagerListener {

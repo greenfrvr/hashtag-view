@@ -31,15 +31,6 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
 
-    public static EventsSampleFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        EventsSampleFragment fragment = new EventsSampleFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,11 +57,6 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     public void onItemSelected(Object item) {
         Timber.i("Select");
         Snackbar.make(coordinator, String.format("Selected items: %s", Arrays.toString(hashtagView2.getSelectedItems().toArray())), Snackbar.LENGTH_SHORT).show();
-    }
-
-    @OnClick(R.id.prev_button)
-    void previousButtonClicked() {
-        getPagerListener().onPreviousClicked();
     }
 
 }

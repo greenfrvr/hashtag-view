@@ -26,14 +26,6 @@ public class GravitySampleFragment extends BaseFragment {
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
     protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
 
-    public static GravitySampleFragment newInstance() {
-        Bundle args = new Bundle();
-
-        GravitySampleFragment fragment = new GravitySampleFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,17 +38,6 @@ public class GravitySampleFragment extends BaseFragment {
         hashtagView1.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
         hashtagView2.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
         hashtagView3.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
-    }
-
-    @OnClick(R.id.prev_button)
-    void previousButtonClicked() {
-        getPagerListener().onPreviousClicked();
-    }
-
-
-    @OnClick(R.id.next_button)
-    void nextButtonClicked() {
-        getPagerListener().onNextClicked();
     }
 
 }
