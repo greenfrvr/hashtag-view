@@ -11,20 +11,16 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.greenfrvr.hashtagview.sample.R;
 import com.greenfrvr.hashtagview.sample.utils.Transformers;
 
-import java.util.Arrays;
-
 import butterknife.Bind;
-import butterknife.OnClick;
 
 /**
  * Created by greenfrvr
  */
 public class BaseSampleFragment extends BaseFragment {
 
-    private static final String data = "Android library collection hashtags min14SDK UI view github opensource project";
-
-    @Bind(R.id.prev_button) Button previousButton;
-    @Bind(R.id.hashtags) HashtagView hashtagView;
+    protected @Bind(R.id.prev_button) Button previousButton;
+    protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
+    protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
 
     @Nullable
     @Override
@@ -37,7 +33,8 @@ public class BaseSampleFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         previousButton.setVisibility(View.GONE);
 
-        hashtagView.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
+        hashtagView1.setData(TAGS, Transformers.HASH);
+        hashtagView2.setData(PEOPLE, Transformers.PERSON);
     }
 
 }

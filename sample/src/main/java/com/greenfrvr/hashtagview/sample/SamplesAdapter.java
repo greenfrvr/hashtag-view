@@ -10,13 +10,14 @@ import com.greenfrvr.hashtagview.sample.fragments.BaseSampleFragment;
 import com.greenfrvr.hashtagview.sample.fragments.EventsSampleFragment;
 import com.greenfrvr.hashtagview.sample.fragments.GravitySampleFragment;
 import com.greenfrvr.hashtagview.sample.fragments.SpacingSampleFragment;
+import com.greenfrvr.hashtagview.sample.fragments.StylingSampleFragment;
 
 /**
  * Created by greenfrvr
  */
 public class SamplesAdapter extends FragmentStatePagerAdapter {
 
-    private static final int COUNT = 4;
+    private static final int COUNT = 5;
     private static final SparseArray<String> fragments = new SparseArray<>(COUNT);
 
     static {
@@ -24,6 +25,7 @@ public class SamplesAdapter extends FragmentStatePagerAdapter {
         fragments.append(1, GravitySampleFragment.class.getName());
         fragments.append(2, SpacingSampleFragment.class.getName());
         fragments.append(3, EventsSampleFragment.class.getName());
+        fragments.append(4, StylingSampleFragment.class.getName());
     }
 
     private Context context;

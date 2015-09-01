@@ -1,40 +1,45 @@
 package com.greenfrvr.hashtagview.sample.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.greenfrvr.hashtagview.sample.R;
 import com.greenfrvr.hashtagview.sample.utils.Transformers;
-
-import java.util.Arrays;
 
 import butterknife.Bind;
 
 /**
  * Created by greenfrvr
  */
-public class SpacingSampleFragment extends BaseFragment {
+public class StylingSampleFragment extends BaseFragment {
 
+    protected @Bind(R.id.next_button) Button nextButton;
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
     protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
+    protected @Bind(R.id.hashtags4) HashtagView hashtagView4;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_spacing_sample, container, false);
+        return inflater.inflate(R.layout.fragment_styling_sample, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hashtagView1.setData(DATA, Transformers.HASH);
-        hashtagView2.setData(DATA, Transformers.HASH);
-        hashtagView3.setData(DATA, Transformers.HASH);
-    }
+        nextButton.setVisibility(View.GONE);
 
+        hashtagView1.setData(DATA, Transformers.CAPS);
+        hashtagView1.setTypeface(Typeface.MONOSPACE);
+        hashtagView2.setData(DATA, Transformers.SPAN1);
+        hashtagView3.setData(DATA, Transformers.SPAN2);
+        hashtagView4.setData(DATA);
+    }
 }

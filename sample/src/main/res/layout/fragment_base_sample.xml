@@ -4,39 +4,67 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:paddingLeft="10dp"
-             android:paddingRight="10dp"
-             android:paddingTop="4dp">
+             android:paddingRight="10dp">
 
-    <android.support.v7.widget.CardView
-        style="@style/Card"
-        app:cardUseCompatPadding="true">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:overScrollMode="never"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:scrollbars="none">
 
-        <LinearLayout style="@style/CardContainer">
+        <android.support.v7.widget.CardView
+            style="@style/Card"
+            app:cardUseCompatPadding="true">
 
-            <TextView
-                style="@style/CardTitle"
-                android:text="Simple way to represent\nyour #hashtags data"/>
+            <LinearLayout style="@style/CardContainer">
 
-            <com.greenfrvr.hashtagview.HashtagView
-                android:id="@+id/hashtags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                app:rowGravity="center"
-                app:rowMode="wrap"
-                app:tagBackground="@drawable/rounded_rect_1"
-                app:tagForeground="@drawable/flat_button_light"
-                app:tagPaddingBottom="8dp"
-                app:tagPaddingLeft="6dp"
-                app:tagPaddingRight="6dp"
-                app:tagPaddingTop="8dp"
-                app:tagTextColor="#E5E5E5"
-                app:tagTextGravity="right"
-                app:tagTextSize="14sp"/>
+                <TextView
+                    style="@style/CardTitle"
+                    android:text="Simple way to represent\nyour collections data"/>
 
-            <include layout="@layout/layout_buttons"/>
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    app:rowGravity="center"
+                    app:rowMode="wrap"
+                    app:tagBackground="@drawable/rounded_rect_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="8dp"
+                    app:tagPaddingLeft="6dp"
+                    app:tagPaddingRight="6dp"
+                    app:tagPaddingTop="8dp"
+                    app:tagTextColor="#E5E5E5"
+                    app:tagTextGravity="right"
+                    app:tagTextSize="14sp"/>
 
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    app:rowGravity="center"
+                    app:rowMode="wrap"
+                    app:tagBackground="@drawable/rounded_rect_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="8dp"
+                    app:tagPaddingLeft="6dp"
+                    app:tagPaddingRight="6dp"
+                    app:tagPaddingTop="8dp"
+                    app:tagTextColor="#E5E5E5"
+                    app:tagTextGravity="right"
+                    app:tagTextSize="14sp"/>
+
+                <include layout="@layout/layout_buttons"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </ScrollView>
 </FrameLayout>

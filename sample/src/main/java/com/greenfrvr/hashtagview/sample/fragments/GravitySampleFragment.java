@@ -13,14 +13,11 @@ import com.greenfrvr.hashtagview.sample.utils.Transformers;
 import java.util.Arrays;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 
 /**
  * Created by greenfrvr
  */
 public class GravitySampleFragment extends BaseFragment {
-
-    private static final String data = "Android library collection hashtags min14SDK UI view github opensource project";
 
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
@@ -35,9 +32,9 @@ public class GravitySampleFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hashtagView1.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
-        hashtagView2.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
-        hashtagView3.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
+        hashtagView1.setData(DATA, Transformers.HASH);
+        hashtagView2.setData(DATA, Transformers.HASH);
+        hashtagView3.setData(DATA, Transformers.HASH);
     }
 
 }

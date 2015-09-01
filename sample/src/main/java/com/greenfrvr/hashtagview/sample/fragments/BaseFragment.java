@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Button;
 
 import com.greenfrvr.hashtagview.sample.R;
 
-import butterknife.Bind;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -16,6 +17,15 @@ import butterknife.OnClick;
  * Created by greenfrvr
  */
 public abstract class BaseFragment extends Fragment {
+
+    public static final List<String> DATA = Arrays.asList("android", "library", "collection",
+            "hashtags", "min14SDK", "UI", "view", "github", "opensource", "project", "widget");
+
+    public static final List<String> TAGS = Arrays.asList("cupcake", "donut", "eclair", "froyo",
+            "gingerbread", "honeycomb", "icecreamsandwich", "jellybean", "kitkat", "lollipop", "marshmallow");
+
+    public static final List<String> PEOPLE = Arrays.asList("wolverine", "jubilee", "colossus",
+            "beast", "rogue", "storm", "cyclops", "iceman", "magma", "emmafrost", "angel");
 
     private PagerListener listener;
 

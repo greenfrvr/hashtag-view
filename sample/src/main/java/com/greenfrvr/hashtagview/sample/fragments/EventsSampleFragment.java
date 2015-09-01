@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.greenfrvr.hashtagview.sample.R;
@@ -16,7 +15,6 @@ import com.greenfrvr.hashtagview.sample.utils.Transformers;
 import java.util.Arrays;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 /**
@@ -24,9 +22,6 @@ import timber.log.Timber;
  */
 public class EventsSampleFragment extends BaseFragment implements HashtagView.TagsClickListener, HashtagView.TagsSelectListener {
 
-    private static final String data = "Android library collection hashtags min14SDK UI view github opensource project";
-
-    @Bind(R.id.next_button) Button nextButton;
     protected @Bind(R.id.coordinator) CoordinatorLayout coordinator;
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
@@ -40,10 +35,9 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nextButton.setVisibility(View.GONE);
-        hashtagView1.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
+        hashtagView1.setData(DATA, Transformers.HASH);
         hashtagView1.setOnTagClickListener(this);
-        hashtagView2.setData(Arrays.asList(data.split("\\s")), Transformers.HASH);
+        hashtagView2.setData(DATA, Transformers.HASH);
         hashtagView2.setOnTagSelectListener(this);
     }
 
