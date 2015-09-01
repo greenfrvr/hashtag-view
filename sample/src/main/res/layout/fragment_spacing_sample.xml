@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="Control spacing"/>
+                    android:text="@string/title_spacing"/>
 
                 <FrameLayout style="@style/Section.Container">
 

@@ -8,14 +8,14 @@
         android:id="@+id/prev_button"
         style="@style/FlatButton"
         android:layout_gravity="left"
-        android:text="Prev"
+        android:text="@string/previous"
         android:textColor="@color/orange_600"/>
 
     <Button
         android:id="@+id/next_button"
         style="@style/FlatButton"
         android:layout_gravity="right"
-        android:text="Next"
+        android:text="@string/next"
         android:textColor="@color/green_600"/>
 
 </FrameLayout>

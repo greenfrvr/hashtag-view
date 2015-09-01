@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="Express your style"/>
+                    android:text="@string/title_styling"/>
 
                 <FrameLayout style="@style/Section.Container">
 

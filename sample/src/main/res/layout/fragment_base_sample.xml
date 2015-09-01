@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="Simple way to represent\nyour collections data"/>
+                    android:text="@string/title_intro"/>
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/hashtags1"

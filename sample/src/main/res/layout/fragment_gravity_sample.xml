@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="Play with the gravity as you want"/>
+                    android:text="@string/title_gravity"/>
 
                 <FrameLayout
                     style="@style/Section.Container"

@@ -26,7 +26,7 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="Handle specific events"/>
+                    android:text="@string/title_events"/>
 
                 <FrameLayout style="@style/Section.Container">
                     <TextView

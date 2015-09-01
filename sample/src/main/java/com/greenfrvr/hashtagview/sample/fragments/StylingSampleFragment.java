@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.greenfrvr.hashtagview.sample.R;
@@ -19,7 +18,6 @@ import butterknife.Bind;
  */
 public class StylingSampleFragment extends BaseFragment {
 
-    protected @Bind(R.id.next_button) Button nextButton;
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
     protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
@@ -34,8 +32,6 @@ public class StylingSampleFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nextButton.setVisibility(View.GONE);
-
         hashtagView1.setData(DATA, Transformers.CAPS);
         hashtagView1.setTypeface(Typeface.MONOSPACE);
         hashtagView2.setData(DATA, Transformers.SPAN1);
