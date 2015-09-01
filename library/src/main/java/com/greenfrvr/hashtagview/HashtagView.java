@@ -149,7 +149,8 @@ public class HashtagView extends LinearLayout {
     public List<Object> getSelectedItems() {
         List<Object> selected = new ArrayList<>();
         for (ItemData item : viewMap.values()) {
-            if (item.isSelected) selected.add(item.data != null ? item.data : item.title);
+            if (item.isSelected)
+                selected.add(item.data != null ? item.data : item.title.toString());
         }
         return selected;
     }
@@ -179,8 +180,9 @@ public class HashtagView extends LinearLayout {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = itemTextGravity;
             textView.setLayoutParams(params);
+            textView.measure(0, 0);
 
-            float width = textView.getPaint().measureText(item.title) + drawableMetrics(textView) + totalOffset();
+            float width = textView.getMeasuredWidth() + drawableMetrics(textView) + totalOffset();
             width = Math.max(width, minItemWidth);
             item.view = view;
             item.width = width;
@@ -309,21 +311,21 @@ public class HashtagView extends LinearLayout {
         item.select();
         if (selectListener != null) {
             if (item.data == null) {
-                selectListener.onItemSelected(item.title);
+                selectListener.onItemSelected(item.title.toString());
             } else {
                 selectListener.onItemSelected(item.data);
             }
         }
 
         for (ItemData it : viewMap.values()) {
-            Timber.i("Item %1$s %2$s selected", it.title, it.isSelected ? "is" : "is not");
+            Timber.i("Item %1$s %2$s selected", it.title.toString(), it.isSelected ? "is" : "is not");
         }
     }
 
     private void handleClick(ItemData item) {
         if (clickListener != null) {
             if (item.data == null) {
-                clickListener.onItemClicked(item.title);
+                clickListener.onItemClicked(item.title.toString());
             } else {
                 clickListener.onItemClicked(item.data);
             }
@@ -428,17 +430,17 @@ public class HashtagView extends LinearLayout {
 
     private class ItemData<T> {
         protected T data;
-        protected String title;
+        protected CharSequence title;
         protected boolean isSelected;
 
         protected View view;
         protected float width;
 
-        public ItemData(String title) {
+        public ItemData(CharSequence title) {
             this.title = title;
         }
 
-        public ItemData(T data, String title) {
+        public ItemData(T data, CharSequence title) {
             this.data = data;
             this.title = title;
         }
@@ -473,6 +475,6 @@ public class HashtagView extends LinearLayout {
     }
 
     public interface DataTransform<T> {
-        String prepare(T item);
+        CharSequence prepare(T item);
     }
 }
