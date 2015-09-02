@@ -4,7 +4,7 @@
     android:enterFadeDuration="400"
     android:exitFadeDuration="400">
 
-    <item android:color="@color/ripple_material_light" android:state_pressed="true"/>
+    <item android:drawable="@color/black_alpha" android:state_pressed="true"/>
     <item android:drawable="@android:color/transparent"/>
 
 </selector>

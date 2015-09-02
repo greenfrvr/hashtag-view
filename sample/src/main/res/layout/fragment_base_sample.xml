@@ -16,9 +16,7 @@
         android:paddingTop="4dp"
         android:scrollbars="none">
 
-        <android.support.v7.widget.CardView
-            style="@style/Card"
-            app:cardUseCompatPadding="true">
+        <android.support.v7.widget.CardView style="@style/Card">
 
             <LinearLayout style="@style/CardContainer">
 
@@ -28,39 +26,25 @@
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/hashtags1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    app:rowGravity="center"
-                    app:rowMode="wrap"
+                    style="@style/HashtagView"
                     app:tagBackground="@drawable/item_bg_1"
                     app:tagForeground="@drawable/flat_button_light"
-                    app:tagPaddingBottom="8dp"
-                    app:tagPaddingLeft="6dp"
-                    app:tagPaddingRight="6dp"
-                    app:tagPaddingTop="8dp"
-                    app:tagTextColor="#E5E5E5"
-                    app:tagTextGravity="right"
-                    app:tagTextSize="14sp"/>
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5"/>
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/hashtags2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    app:rowGravity="center"
-                    app:rowMode="wrap"
+                    style="@style/HashtagView"
                     app:tagBackground="@drawable/item_bg_1"
                     app:tagForeground="@drawable/flat_button_light"
-                    app:tagPaddingBottom="8dp"
-                    app:tagPaddingLeft="6dp"
-                    app:tagPaddingRight="6dp"
-                    app:tagPaddingTop="8dp"
-                    app:tagTextColor="#E5E5E5"
-                    app:tagTextGravity="right"
-                    app:tagTextSize="14sp"/>
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5"/>
 
                 <include layout="@layout/layout_buttons"/>
 

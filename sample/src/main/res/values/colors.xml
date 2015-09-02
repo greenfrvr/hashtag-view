@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="primary">#546E7A</color>
+    <color name="primary_dark">#37474F</color>
+    <color name="accent">#C0CA33</color>
+    <color name="primary_light">#B0BEC5</color>
+
     <color name="white_alpha">#8FFF</color>
+    <color name="black_alpha">#2000</color>
 
     <color name="green_600">#43A047</color>
-    <color name="teal">#B2DFDB</color>
     <color name="orange_600">#F4511E</color>
+    <color name="teal">#B2DFDB</color>
 
     <color name="cyan">#0097A7</color>
     <color name="light_green">#689F38</color>

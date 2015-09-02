@@ -1,21 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.greenfrvr.hashtagview.sample" >
+<manifest
+    package="com.greenfrvr.hashtagview.sample"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <compatible-screens>
+        <screen
+            android:screenDensity="ldpi"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="xhdpi"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="480"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="640"
+            android:screenSize="small"/>
+        <screen
+            android:screenDensity="ldpi"
+            android:screenSize="normal"/>
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="normal"/>
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="normal"/>
+        <screen
+            android:screenDensity="xhdpi"
+            android:screenSize="normal"/>
+        <screen
+            android:screenDensity="480"
+            android:screenSize="normal"/>
+        <screen
+            android:screenDensity="640"
+            android:screenSize="normal"/>
+    </compatible-screens>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="5e8b77244046ef5934ca07b565b2199e94077641"/>
     </application>
 
 </manifest>

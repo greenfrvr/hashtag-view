@@ -19,7 +19,7 @@ import butterknife.OnClick;
 public abstract class BaseFragment extends Fragment {
 
     public static final List<String> DATA = Arrays.asList("android", "library", "collection",
-            "hashtags", "min14SDK", "UI", "view", "github", "opensource", "project", "widget");
+            "hashtags", "min14sdk", "UI", "view", "github", "opensource", "project", "widget");
 
     public static final List<String> TAGS = Arrays.asList("cupcake", "donut", "eclair", "froyo",
             "gingerbread", "honeycomb", "icecreamsandwich", "jellybean", "kitkat", "lollipop", "marshmallow");

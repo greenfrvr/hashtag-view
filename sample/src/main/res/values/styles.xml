@@ -1,6 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="FlatButton">
@@ -26,8 +29,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/section_bg</item>
         <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
@@ -51,6 +54,13 @@
         <item name="android:textColor">@android:color/primary_text_light</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="HashtagView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingTop">10dp</item>
     </style>
 
 </resources>
