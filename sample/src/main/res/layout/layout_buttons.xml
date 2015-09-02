@@ -8,7 +8,7 @@
         android:id="@+id/prev_button"
         style="@style/FlatButton"
         android:layout_gravity="left"
-        android:text="@string/previous"
+        android:text="@string/back"
         android:textColor="@color/orange_600"/>
 
     <Button

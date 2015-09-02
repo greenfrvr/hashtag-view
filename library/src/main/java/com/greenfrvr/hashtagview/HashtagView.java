@@ -167,27 +167,18 @@ public class HashtagView extends LinearLayout {
         if (data == null || data.isEmpty()) return;
 
         for (ItemData item : data) {
-            View view = inflateTagView(item);
+            View view = inflateItemView(item);
 
-            TextView textView = (TextView) view.findViewById(R.id.text);
-            textView.setText(item.title);
-            textView.setTextColor(itemTextColor);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
-            textView.setCompoundDrawablePadding(itemDrawablePadding);
-            textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
-            if (typeface != null) textView.setTypeface(typeface);
+            TextView itemView = (TextView) view.findViewById(R.id.text);
+            itemView.setText(item.title);
+            decorate(itemView);
 
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = itemTextGravity;
-            textView.setLayoutParams(params);
-            textView.measure(0, 0);
-
-            float width = textView.getMeasuredWidth() + drawableMetrics(textView) + totalOffset();
+            float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
             width = Math.max(width, minItemWidth);
             item.view = view;
             item.width = width;
-            widthList.add(width);
 
+            widthList.add(width);
             totalItemsWidth += width;
         }
 
@@ -196,16 +187,17 @@ public class HashtagView extends LinearLayout {
         Timber.i(Arrays.toString(data.toArray()));
     }
 
-    private int totalOffset() {
-        return itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
-    }
+    private void decorate(TextView textView) {
+        textView.setTextColor(itemTextColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
+        textView.setCompoundDrawablePadding(itemDrawablePadding);
+        textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
+        if (typeface != null) textView.setTypeface(typeface);
 
-    private int drawableMetrics(TextView textView) {
-        int drawablesWidth = 0;
-        Drawable[] drawables = textView.getCompoundDrawables();
-        drawablesWidth += drawables[0] != null ? drawables[0].getIntrinsicWidth() + itemDrawablePadding : 0;
-        drawablesWidth += drawables[2] != null ? drawables[2].getIntrinsicWidth() + itemDrawablePadding : 0;
-        return drawablesWidth;
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = itemTextGravity;
+        textView.setLayoutParams(params);
+        textView.measure(0, 0);
     }
 
     private int evaluateRowsQuantity() {
@@ -285,7 +277,19 @@ public class HashtagView extends LinearLayout {
         return getWidth() - getPaddingLeft() - getPaddingRight();
     }
 
-    private View inflateTagView(final ItemData item) {
+    private int totalOffset() {
+        return itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
+    }
+
+    private int drawableMetrics(TextView textView) {
+        int drawablesWidth = 0;
+        Drawable[] drawables = textView.getCompoundDrawables();
+        drawablesWidth += drawables[0] != null ? drawables[0].getIntrinsicWidth() + itemDrawablePadding : 0;
+        drawablesWidth += drawables[2] != null ? drawables[2].getIntrinsicWidth() + itemDrawablePadding : 0;
+        return drawablesWidth;
+    }
+
+    private View inflateItemView(final ItemData item) {
         ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
         itemLayout.setBackgroundResource(backgroundDrawable);
         itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
@@ -307,6 +311,16 @@ public class HashtagView extends LinearLayout {
         return itemLayout;
     }
 
+    private LayoutParams getItemLayoutParams() {
+        LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemParams.bottomMargin = rowMargin;
+        itemParams.topMargin = rowMargin;
+        itemParams.leftMargin = itemMargin;
+        itemParams.rightMargin = itemMargin;
+        itemParams.weight = rowMode;
+        return itemParams;
+    }
+
     private void handleSelection(ItemData item) {
         item.select();
         if (selectListener != null) {
@@ -315,10 +329,6 @@ public class HashtagView extends LinearLayout {
             } else {
                 selectListener.onItemSelected(item.data);
             }
-        }
-
-        for (ItemData it : viewMap.values()) {
-            Timber.i("Item %1$s %2$s selected", it.title.toString(), it.isSelected ? "is" : "is not");
         }
     }
 
@@ -330,16 +340,6 @@ public class HashtagView extends LinearLayout {
                 clickListener.onItemClicked(item.data);
             }
         }
-    }
-
-    private LayoutParams getItemLayoutParams() {
-        LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemParams.bottomMargin = rowMargin;
-        itemParams.topMargin = rowMargin;
-        itemParams.leftMargin = itemMargin;
-        itemParams.rightMargin = itemMargin;
-        itemParams.weight = rowMode;
-        return itemParams;
     }
 
     public void setItemMargin(int itemMargin) {
@@ -430,11 +430,11 @@ public class HashtagView extends LinearLayout {
 
     private class ItemData<T> {
         protected T data;
-        protected CharSequence title;
-        protected boolean isSelected;
 
         protected View view;
+        protected CharSequence title;
         protected float width;
+        protected boolean isSelected;
 
         public ItemData(CharSequence title) {
             this.title = title;

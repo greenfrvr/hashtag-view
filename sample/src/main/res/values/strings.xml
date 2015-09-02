@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">HashtagView demo</string>
 
+    <string name="action_settings">Settings</string>
+
     <string name="title_intro">Simple way to represent\nyour collections data</string>
     <string name="title_events">Handle specific events</string>
     <string name="title_gravity">Play with the gravity as you want</string>
@@ -15,6 +17,6 @@
     <string name="github">https://github.com/greenfrvr/hashtag-view</string>
     <string name="email">greenfrvr.dev@gmail.com</string>
 
-    <string name="previous">PREV</string>
+    <string name="back">BACK</string>
     <string name="next">NEXT</string>
 </resources>
