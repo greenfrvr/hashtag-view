@@ -1,6 +1,7 @@
 <resources>
     <dimen name="min_item_width">0dp</dimen>
     <dimen name="default_text_size">14sp</dimen>
-    <dimen name="default_item_margin">4dp</dimen>
-    <dimen name="default_row_margin">4dp</dimen>
+    <dimen name="default_item_margin">2dp</dimen>
+    <dimen name="default_item_padding">4dp</dimen>
+    <dimen name="default_row_margin">2dp</dimen>
 </resources>
