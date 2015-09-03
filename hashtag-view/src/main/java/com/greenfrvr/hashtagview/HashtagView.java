@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -23,22 +24,31 @@ import android.widget.TextView;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  * Created by greenfrvr
  */
 public class HashtagView extends LinearLayout {
 
+    @IntDef({GRAVITY_LEFT, GRAVITY_CENTER, GRAVITY_RIGHT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface GravityMode {
+    }
+
     public static final int GRAVITY_LEFT = Gravity.LEFT;
     public static final int GRAVITY_RIGHT = Gravity.RIGHT;
     public static final int GRAVITY_CENTER = Gravity.CENTER;
+
+    @IntDef({MODE_WRAP, MODE_STRETCH})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface StretchMode {
+    }
 
     public static final int MODE_STRETCH = 1;
     public static final int MODE_WRAP = 0;
@@ -81,7 +91,6 @@ public class HashtagView extends LinearLayout {
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            Timber.i("Pre draw listener shoots");
             wrap();
             sort();
             draw();
@@ -184,7 +193,6 @@ public class HashtagView extends LinearLayout {
 
         Collections.sort(data, comparator);
         Collections.sort(widthList, Collections.reverseOrder());
-        Timber.i(Arrays.toString(data.toArray()));
     }
 
     private void decorate(TextView textView) {
@@ -203,7 +211,6 @@ public class HashtagView extends LinearLayout {
     private int evaluateRowsQuantity() {
         if (widthList == null || widthList.isEmpty()) return 0;
 
-        Timber.i("Total items width is %f, and width of widget is %d", totalItemsWidth, getViewWidth());
         int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
         int[] rowsWidth = new int[rows];
         int iterationLimit = rows + widthList.size();
@@ -233,7 +240,6 @@ public class HashtagView extends LinearLayout {
 
         int rowsQuantity = evaluateRowsQuantity();
         final int[] rowsWidth = new int[rowsQuantity];
-        Timber.i("Rows count - %d", rowsQuantity);
 
         viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
 
@@ -297,14 +303,13 @@ public class HashtagView extends LinearLayout {
         try {
             if (foregroundDrawable != 0)
                 ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
-        } catch (Exception e){
-            Timber.i(e, "");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         itemLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Timber.i("Item clicked");
                 if (isInSelectMode) {
                     handleSelection(item);
                 } else {
@@ -404,11 +409,11 @@ public class HashtagView extends LinearLayout {
         this.rowMargin = getResources().getDimensionPixelOffset(rowMargin);
     }
 
-    public void setRowGravity(int rowGravity) {
+    public void setRowGravity(@GravityMode int rowGravity) {
         this.rowGravity = rowGravity;
     }
 
-    public void setRowMode(int rowMode) {
+    public void setRowMode(@StretchMode int rowMode) {
         this.rowMode = rowMode;
     }
 
