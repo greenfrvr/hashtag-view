@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.google.guava:guava-collections:r03'
+    compile 'com.jakewharton.timber:timber:3.1.0'
+    testCompile 'junit:junit:4.12'
+}
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'hashtag-view'
+
+    publishedGroupId = 'com.github.greenfrvr'
+    libraryName = 'HashtagView'
+    artifact = 'hashtag-view'
+
+    libraryDescription = 'Fully customizable widget for representing data like hashtags collection and similiar.'
+
+    siteUrl = 'https://bintray.com/greenfrvr/maven/hashtag-view'
+    gitUrl = 'https://github.com/greenfrvr/hashtag-view.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'greenfrvr'
+    developerName = 'Artsiom Grintsevich'
+    developerEmail = 'greenfrvr.dev@gmail.com'
+
+    licenseName = 'The MIT License (MIT)'
+    licenseUrl = 'http://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+apply from: 'install.gradle'
+apply from: 'bintray.gradle'
