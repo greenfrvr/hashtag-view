@@ -32,3 +32,92 @@ repositories {
 }
 ```
 This will reference Bintray's Maven repository that contains hashtags widget directly, rather than going through jCenter first.
+
+## Data
+
+First of all there are two ways to fill `HashtagView` with data. 
+    1. If you need only displaying your data you can use `HashtagView.setData(List<String> data);` method.
+    2. If you want some more complex behavior or you want to use your data models, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer)` method.
+Few words about how it works. First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
+For example you have model 
+
+```java
+public class Person {
+    int id;
+    String firstName;
+    String midName
+    String lastName;
+}
+```
+Now when passing list of `Person`'s, we implementing `DataTransform` interface
+```java
+HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
+    @Override
+    public CharSequence prepare(Person item) {
+        String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+        SpannableString spannableString = new SpannableString(label);
+        spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(color2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(color3), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+        }
+};)
+```
+As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.
+
+## Attributes
+All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
+```xml
+    <!-- Item text color. -->
+    <attr name="tagTextColor" format="color"/>
+    <!-- Item text size. -->
+    <attr name="tagTextSize" format="dimension"/>
+    <!-- Item text gravity, works only in stretch mode. -->
+    <attr name="tagTextGravity" format="enum">
+        <enum name="left" value="3"/>
+        <enum name="right" value="5"/>
+        <enum name="center" value="17"/>
+    </attr>
+    <!-- Item background color or resource. -->
+    <attr name="tagBackground" format="color|reference"/>
+    <!-- Item foreground color or resource. -->
+    <attr name="tagForeground" format="color|reference"/>
+    <!-- Item left drawable resource. -->
+    <attr name="tagDrawableLeft" format="reference"/>
+    <!-- Item right drawable resource. -->
+    <attr name="tagDrawableRight" format="reference"/>
+    <!-- Item drawable padding. -->
+    <attr name="tagDrawablePadding" format="dimension"/>
+    <!-- Item left and right margins, total distance between two items in a row is be 2 * tagMergin. -->
+    <attr name="tagMargin" format="dimension"/>
+    <!-- Item left padding. -->
+    <attr name="tagPaddingLeft" format="dimension"/>
+    <!-- Item right padding. -->
+    <attr name="tagPaddingRight" format="dimension"/>
+    <!-- Item top padding. -->
+    <attr name="tagPaddingTop" format="dimension"/>
+    <!-- Item bottom padding. -->
+    <attr name="tagPaddingBottom" format="dimension"/>
+    <!-- Item minimal width. -->
+    <attr name="tagMinWidth" format="dimension"/>
+    <!-- Row top and bottom margins, total distance between two rows is 2 * rowMargin. -->
+    <attr name="rowMargin" format="dimension"/>
+    <!-- Defines gravity of row items distribution. -->
+    <attr name="rowGravity" format="enum">
+        <enum name="left" value="3"/>
+        <enum name="right" value="5"/>
+        <enum name="center" value="17"/>
+    </attr>
+    <!-- Defines if each item will wrap its content, or widget will fill all given width. -->
+    <attr name="rowMode" format="enum">
+        <enum name="wrap" value="0"/>
+        <enum name="stretch" value="1"/>
+    </attr>
+    <!-- Enables selection mode (don't forget to use <selectors>). -->
+    <attr name="selectionMode" format="boolean"/>
+```
+Also you can set up custom typeface by `HashtagView.setTypeface(Typeface)`.
+If you want to use some `<selector>` backgrounds you can set `tagBackground` property, `tagForeground` property can be used in case if you want to use `<ripple>` drawables.
+
+
+        
