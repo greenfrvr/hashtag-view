@@ -15,7 +15,6 @@ import com.greenfrvr.hashtagview.sample.utils.Transformers;
 import java.util.Arrays;
 
 import butterknife.Bind;
-import timber.log.Timber;
 
 /**
  * Created by greenfrvr
@@ -43,13 +42,11 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
 
     @Override
     public void onItemClicked(Object item) {
-        Timber.i("Click");
         Snackbar.make(coordinator, String.format("Item %s clicked", item.toString()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemSelected(Object item) {
-        Timber.i("Select");
         Snackbar.make(coordinator, String.format("Selected items: %s", Arrays.toString(hashtagView2.getSelectedItems().toArray())), Snackbar.LENGTH_SHORT).show();
     }
 

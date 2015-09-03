@@ -8,7 +8,6 @@ import com.greenfrvr.hashtagview.sample.fragments.BaseFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements BaseFragment.PagerListener {
 
@@ -34,14 +33,12 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Page
 
     @Override
     public void onPreviousClicked() {
-        Timber.i("Previous clicked");
         int current = viewPager.getCurrentItem();
         viewPager.setCurrentItem(current - 1);
     }
 
     @Override
     public void onNextClicked() {
-        Timber.i("Next clicked");
         int current = viewPager.getCurrentItem();
         viewPager.setCurrentItem(current + 1);
     }

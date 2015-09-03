@@ -33,3 +33,7 @@ proguard/
 
 # Log Files
 *.log
+
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
+.idea/
+*.iml

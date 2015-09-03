@@ -139,6 +139,11 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    /**
+     * Method defines data as simple {@link java.lang.String} array. Using this method makes not
+     * possible to use {@link android.text.Spannable} for representing items label.
+     * @param list {@link java.lang.String} array representing data collection.
+     */
     public void setData(List<String> list) {
         widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
@@ -147,6 +152,13 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    /**
+     * @param list Array of user defined objects representing data collection.
+     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}
+     *                    interface. Can be used for building label from several custom data model
+     *                    fields or to prepare {@link android.text.Spannable} label representation.
+     * @param <T> Custom data model
+     */
     public <T> void setData(List<T> list, DataTransform<T> transformer) {
         widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
@@ -155,6 +167,10 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+
+    /**
+     * @return List of selected items. Consists of objects corresponding to custom data model defined by setData() method
+     */
     public List<Object> getSelectedItems() {
         List<Object> selected = new ArrayList<>();
         for (ItemData item : viewMap.values()) {
@@ -164,10 +180,18 @@ public class HashtagView extends LinearLayout {
         return selected;
     }
 
+    /**
+     * Set up single item click listener
+     * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsClickListener}
+     */
     public void setOnTagClickListener(TagsClickListener listener) {
         this.clickListener = listener;
     }
 
+    /**
+     * Set up selection items listener
+     * @param listener
+     */
     public void setOnTagSelectListener(TagsSelectListener listener) {
         this.selectListener = listener;
     }

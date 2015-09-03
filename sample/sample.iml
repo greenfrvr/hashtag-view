@@ -106,8 +106,8 @@
     <orderEntry type="library" exported="" name="guava-annotations-r03" level="project" />
     <orderEntry type="library" exported="" name="beta-1.1.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="guava-base-r03" level="project" />
     <orderEntry type="library" exported="" name="guava-collections-r03" level="project" />
+    <orderEntry type="library" exported="" name="guava-base-r03" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="fabric-1.3.5" level="project" />
     <orderEntry type="module" module-name="hashtag-view" exported="" />

@@ -40,21 +40,6 @@ public class SamplesAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return Fragment.instantiate(context, fragments.get(position));
-//        switch (position) {
-//            case 0:
-//                return new BaseSampleFragment();
-//            case 1:
-//                return new GravitySampleFragment();
-//            case 2:
-//                return new SpacingSampleFragment();
-//            case 3:
-//                return new EventsSampleFragment();
-//            case 4:
-//                return new StylingSampleFragment();
-//            case 5:
-//                return new ContactsFragment();
-//        }
-//        return null
     }
 
     @Override
