@@ -36,8 +36,10 @@ This will reference Bintray's Maven repository that contains hashtags widget dir
 ## Data
 
 First of all there are two ways to fill `HashtagView` with data. 
-    1. If you need only displaying your data you can use `HashtagView.setData(List<String> data);` method.
-    2. If you want some more complex behavior or you want to use your data models, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer)` method.
+
+1. If you need only displaying your data you can use `HashtagView.setData(List<String> data);` method.
+2. If you want some more complex behavior or you want to use your data models, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer)` method.
+
 Few words about how it works. First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
 For example you have model 
 
@@ -65,7 +67,7 @@ HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
 ```
 As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.
 
-## Attributes
+## Customizing
 All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
 ```xml
     <!-- Item text color. -->
