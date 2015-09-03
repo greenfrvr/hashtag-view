@@ -2,9 +2,6 @@
 Fully customizable widget for representing data like hashtags collection and similiar.
 
 ![sample1](https://github.com/greenfrvr/hashtag-view/blob/master/screenshots/screen1.png)
-![sample2](https://github.com/greenfrvr/hashtag-view/blob/master/screenshots/screen2.png)
-![sample3](https://github.com/greenfrvr/hashtag-view/blob/master/screenshots/screen3.png)
-
 
 ## Demo
 Downlaod latest demo app from Play Market:
@@ -14,7 +11,9 @@ Downlaod latest demo app from Play Market:
        src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
 </a>
 
-## Gradle Dependency (jCenter)
+## Gradle Dependency
+[ ![Download](https://api.bintray.com/packages/greenfrvr/maven/hashtag-view/images/download.svg) ](https://bintray.com/greenfrvr/maven/hashtag-view/_latestVersion)
+
 Easily reference the library in your Android projects using this dependency in your module's build.gradle file:
 
 ```Gradle 
