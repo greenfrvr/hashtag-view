@@ -69,6 +69,8 @@ As you may notice implementing `DataTransform.prepare()` method let you define `
 
 ## Customizing
 All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
+
+##### Text attributes
 ```xml
     <!-- Item text color. -->
     <attr name="tagTextColor" format="color"/>
@@ -80,6 +82,9 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
         <enum name="right" value="5"/>
         <enum name="center" value="17"/>
     </attr>
+```
+##### Background and drawables
+```xml
     <!-- Item background color or resource. -->
     <attr name="tagBackground" format="color|reference"/>
     <!-- Item foreground color or resource. -->
@@ -90,6 +95,9 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="tagDrawableRight" format="reference"/>
     <!-- Item drawable padding. -->
     <attr name="tagDrawablePadding" format="dimension"/>
+```
+##### Spacing 
+```xml
     <!-- Item left and right margins, total distance between two items in a row is be 2 * tagMergin. -->
     <attr name="tagMargin" format="dimension"/>
     <!-- Item left padding. -->
@@ -104,6 +112,9 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="tagMinWidth" format="dimension"/>
     <!-- Row top and bottom margins, total distance between two rows is 2 * rowMargin. -->
     <attr name="rowMargin" format="dimension"/>
+```
+##### Specific properties
+```xml
     <!-- Defines gravity of row items distribution. -->
     <attr name="rowGravity" format="enum">
         <enum name="left" value="3"/>
