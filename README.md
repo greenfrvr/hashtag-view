@@ -17,16 +17,15 @@ Downlaod latest demo app from Play Market:
 ## Gradle Dependency (jCenter)
 Easily reference the library in your Android projects using this dependency in your module's build.gradle file:
 
-```
+```Gradle 
 dependencies {
     compile 'com.github.greenfrvr:hashtag-view:1.0.0@aar'
 }
 ```
-
 In case of any issues with jCenter (library can't be resolved)
 
 Add repository to your app's build.gradle file:
-```
+```Gradle
 repositories {
     maven {
         url 'https://dl.bintray.com/greenfrvr/maven/'
