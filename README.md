@@ -135,7 +135,9 @@ If you want to use some `<selector>` backgrounds you can set `tagBackground` pro
 ## Events
 There are two type of events that can be handled by `HashtagView`.
 
-- **Item click event**. Setting up item click listener 
+- **Item click event**. 
+Setting up item click listener 
+
 ```java
 HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
             @Override
@@ -144,7 +146,9 @@ HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
             }
         });
 ```
-- **Item selection event**. Setting up item click listener 
+- **Item selection event**. 
+Setting up item click listener 
+
 ```java
 HashtagView.setOnTagSelectListener(new HashtagView.TagsSelectListener() {
             @Override
