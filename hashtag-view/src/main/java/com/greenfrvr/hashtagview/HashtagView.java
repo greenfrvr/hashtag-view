@@ -9,6 +9,8 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -109,42 +111,13 @@ public class HashtagView extends LinearLayout {
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
     }
 
-    private void extractAttributes(AttributeSet attrs) {
-        TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.HashtagView, 0, 0);
-        try {
-            itemMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMargin, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
-            itemPaddingLeft = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemDrawablePadding = a.getDimensionPixelOffset(R.styleable.HashtagView_tagDrawablePadding, 0);
-            minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
-            rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
-            itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
-
-            itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
-            rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
-            rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
-
-            backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
-            foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
-            leftDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableLeft, 0);
-            rightDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableRight, 0);
-
-            itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
-
-            isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
-        } finally {
-            a.recycle();
-        }
-    }
-
     /**
      * Method defines data as simple {@link java.lang.String} array. Using this method makes not
      * possible to use {@link android.text.Spannable} for representing items label.
+     *
      * @param list {@link java.lang.String} array representing data collection.
      */
-    public void setData(List<String> list) {
+    public void setData(@NonNull List<String> list) {
         widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
         for (String item : list) {
@@ -153,17 +126,24 @@ public class HashtagView extends LinearLayout {
     }
 
     /**
-     * @param list Array of user defined objects representing data collection.
+     * Method defines data as an array of custom data model. Using this method allow you
+     * to use {@link android.text.Spannable} for representing items label.
+     *
+     * @param list        Array of user defined objects representing data collection.
      * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}
      *                    interface. Can be used for building label from several custom data model
      *                    fields or to prepare {@link android.text.Spannable} label representation.
-     * @param <T> Custom data model
+     * @param <T>         Custom data model
      */
-    public <T> void setData(List<T> list, DataTransform<T> transformer) {
+    public <T> void setData(@NonNull List<T> list, @Nullable DataTransform<T> transformer) {
         widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
         for (T item : list) {
-            data.add(new ItemData<>(item, transformer.prepare(item)));
+            if (transformer == null) {
+                data.add(new ItemData<>(item.toString()));
+            } else {
+                data.add(new ItemData<>(item, transformer.prepare(item)));
+            }
         }
     }
 
@@ -182,6 +162,7 @@ public class HashtagView extends LinearLayout {
 
     /**
      * Set up single item click listener
+     *
      * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsClickListener}
      */
     public void setOnTagClickListener(TagsClickListener listener) {
@@ -190,189 +171,11 @@ public class HashtagView extends LinearLayout {
 
     /**
      * Set up selection items listener
-     * @param listener
+     *
+     * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsSelectListener}
      */
     public void setOnTagSelectListener(TagsSelectListener listener) {
         this.selectListener = listener;
-    }
-
-    public void wrap() {
-        if (data == null || data.isEmpty()) return;
-
-        for (ItemData item : data) {
-            View view = inflateItemView(item);
-
-            TextView itemView = (TextView) view.findViewById(R.id.text);
-            itemView.setText(item.title);
-            decorate(itemView);
-
-            float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
-            width = Math.max(width, minItemWidth);
-            item.view = view;
-            item.width = width;
-
-            widthList.add(width);
-            totalItemsWidth += width;
-        }
-
-        Collections.sort(data, comparator);
-        Collections.sort(widthList, Collections.reverseOrder());
-    }
-
-    private void decorate(TextView textView) {
-        textView.setTextColor(itemTextColor);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
-        textView.setCompoundDrawablePadding(itemDrawablePadding);
-        textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
-        if (typeface != null) textView.setTypeface(typeface);
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = itemTextGravity;
-        textView.setLayoutParams(params);
-        textView.measure(0, 0);
-    }
-
-    private int evaluateRowsQuantity() {
-        if (widthList == null || widthList.isEmpty()) return 0;
-
-        int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
-        int[] rowsWidth = new int[rows];
-        int iterationLimit = rows + widthList.size();
-
-        int counter = 0;
-        while (!widthList.isEmpty()) {
-            rowIteration:
-            for (int i = 0; i < rows; i++) {
-                if (counter > iterationLimit)
-                    return rows + 1;
-
-                counter++;
-                for (Float item : widthList) {
-                    if (rowsWidth[i] + item < getWidth()) {
-                        rowsWidth[i] += item;
-                        widthList.remove(item);
-                        continue rowIteration;
-                    }
-                }
-            }
-        }
-        return rows;
-    }
-
-    public void sort() {
-        if (data == null || data.isEmpty()) return;
-
-        int rowsQuantity = evaluateRowsQuantity();
-        final int[] rowsWidth = new int[rowsQuantity];
-
-        viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
-
-        while (!data.isEmpty()) {
-            rowIteration:
-            for (int i = 0; i < rowsQuantity; i++) {
-                for (ItemData item : data) {
-                    if (rowsWidth[i] + item.width < getViewWidth()) {
-                        rowsWidth[i] += item.width;
-                        viewMap.put(i, item);
-                        data.remove(item);
-                        continue rowIteration;
-                    }
-                }
-            }
-        }
-    }
-
-    public void draw() {
-        if (viewMap == null || viewMap.isEmpty()) return;
-        removeAllViews();
-
-        for (Integer key : viewMap.keySet()) {
-            LinearLayout rowLayout = new LinearLayout(getContext());
-            rowLayout.setGravity(Gravity.CENTER);
-            rowLayout.setOrientation(HORIZONTAL);
-            rowLayout.setLayoutParams(rowParams);
-            rowLayout.setGravity(rowGravity);
-            rowLayout.setWeightSum(viewMap.get(key).size());
-            addView(rowLayout);
-
-            List<ItemData> itemsList = new ArrayList<>(viewMap.get(key));
-            Collections.shuffle(itemsList);
-            for (ItemData item : itemsList) {
-                rowLayout.addView(item.view, getItemLayoutParams());
-            }
-        }
-    }
-
-    private int getViewWidth() {
-        return getWidth() - getPaddingLeft() - getPaddingRight();
-    }
-
-    private int totalOffset() {
-        return itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
-    }
-
-    private int drawableMetrics(TextView textView) {
-        int drawablesWidth = 0;
-        Drawable[] drawables = textView.getCompoundDrawables();
-        drawablesWidth += drawables[0] != null ? drawables[0].getIntrinsicWidth() + itemDrawablePadding : 0;
-        drawablesWidth += drawables[2] != null ? drawables[2].getIntrinsicWidth() + itemDrawablePadding : 0;
-        return drawablesWidth;
-    }
-
-    private View inflateItemView(final ItemData item) {
-        ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
-        itemLayout.setBackgroundResource(backgroundDrawable);
-        itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
-        itemLayout.setMinimumWidth(minItemWidth);
-        try {
-            if (foregroundDrawable != 0)
-                ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        itemLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isInSelectMode) {
-                    handleSelection(item);
-                } else {
-                    handleClick(item);
-                }
-            }
-        });
-        return itemLayout;
-    }
-
-    private LayoutParams getItemLayoutParams() {
-        LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemParams.bottomMargin = rowMargin;
-        itemParams.topMargin = rowMargin;
-        itemParams.leftMargin = itemMargin;
-        itemParams.rightMargin = itemMargin;
-        itemParams.weight = rowMode;
-        return itemParams;
-    }
-
-    private void handleSelection(ItemData item) {
-        item.select();
-        if (selectListener != null) {
-            if (item.data == null) {
-                selectListener.onItemSelected(item.title.toString());
-            } else {
-                selectListener.onItemSelected(item.data);
-            }
-        }
-    }
-
-    private void handleClick(ItemData item) {
-        if (clickListener != null) {
-            if (item.data == null) {
-                clickListener.onItemClicked(item.title.toString());
-            } else {
-                clickListener.onItemClicked(item.data);
-            }
-        }
     }
 
     public void setItemMargin(int itemMargin) {
@@ -461,6 +264,215 @@ public class HashtagView extends LinearLayout {
         this.typeface = typeface;
     }
 
+    private void extractAttributes(AttributeSet attrs) {
+        TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.HashtagView, 0, 0);
+        try {
+            itemMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMargin, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
+            itemPaddingLeft = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemDrawablePadding = a.getDimensionPixelOffset(R.styleable.HashtagView_tagDrawablePadding, 0);
+            minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
+            rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
+            itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
+
+            itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
+            rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
+            rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
+
+            backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
+            foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
+            leftDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableLeft, 0);
+            rightDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableRight, 0);
+
+            itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
+
+            isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    private void wrap() {
+        if (data == null || data.isEmpty()) return;
+
+        for (ItemData item : data) {
+            View view = inflateItemView(item);
+
+            TextView itemView = (TextView) view.findViewById(R.id.text);
+            itemView.setText(item.title);
+            decorateItemTextView(itemView);
+
+            float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
+            width = Math.max(width, minItemWidth);
+            item.view = view;
+            item.width = width;
+
+            widthList.add(width);
+            totalItemsWidth += width;
+        }
+
+        Collections.sort(data, comparator);
+        Collections.sort(widthList, Collections.reverseOrder());
+    }
+
+    private void sort() {
+        if (data == null || data.isEmpty()) return;
+
+        int rowsQuantity = evaluateRowsQuantity();
+        final int[] rowsWidth = new int[rowsQuantity];
+
+        viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
+
+        while (!data.isEmpty()) {
+            rowIteration:
+            for (int i = 0; i < rowsQuantity; i++) {
+                for (ItemData item : data) {
+                    if (rowsWidth[i] + item.width < getViewWidth()) {
+                        rowsWidth[i] += item.width;
+                        viewMap.put(i, item);
+                        data.remove(item);
+                        continue rowIteration;
+                    }
+                }
+            }
+        }
+    }
+
+    private void draw() {
+        if (viewMap == null || viewMap.isEmpty()) return;
+        removeAllViews();
+
+        for (Integer key : viewMap.keySet()) {
+            LinearLayout rowLayout = new LinearLayout(getContext());
+            rowLayout.setGravity(Gravity.CENTER);
+            rowLayout.setOrientation(HORIZONTAL);
+            rowLayout.setLayoutParams(rowParams);
+            rowLayout.setGravity(rowGravity);
+            rowLayout.setWeightSum(viewMap.get(key).size());
+            addView(rowLayout);
+
+            List<ItemData> itemsList = new ArrayList<>(viewMap.get(key));
+            Collections.shuffle(itemsList);
+            for (ItemData item : itemsList) {
+                rowLayout.addView(item.view, getItemLayoutParams());
+            }
+        }
+    }
+
+    private int getViewWidth() {
+        return getWidth() - getPaddingLeft() - getPaddingRight();
+    }
+
+    private int totalOffset() {
+        return itemPaddingLeft + itemPaddingRight + 2 * itemMargin;
+    }
+
+    private int drawableMetrics(TextView textView) {
+        int drawablesWidth = 0;
+        Drawable[] drawables = textView.getCompoundDrawables();
+        drawablesWidth += drawables[0] != null ? drawables[0].getIntrinsicWidth() + itemDrawablePadding : 0;
+        drawablesWidth += drawables[2] != null ? drawables[2].getIntrinsicWidth() + itemDrawablePadding : 0;
+        return drawablesWidth;
+    }
+
+    private int evaluateRowsQuantity() {
+        if (widthList == null || widthList.isEmpty()) return 0;
+
+        int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
+        int[] rowsWidth = new int[rows];
+        int iterationLimit = rows + widthList.size();
+
+        int counter = 0;
+        while (!widthList.isEmpty()) {
+            rowIteration:
+            for (int i = 0; i < rows; i++) {
+                if (counter > iterationLimit)
+                    return rows + 1;
+
+                counter++;
+                for (Float item : widthList) {
+                    if (rowsWidth[i] + item < getWidth()) {
+                        rowsWidth[i] += item;
+                        widthList.remove(item);
+                        continue rowIteration;
+                    }
+                }
+            }
+        }
+        return rows;
+    }
+
+    private View inflateItemView(final ItemData item) {
+        ViewGroup itemLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.layout_item, this, false);
+        itemLayout.setBackgroundResource(backgroundDrawable);
+        itemLayout.setPadding(itemPaddingLeft, itemPaddingTop, itemPaddingRight, itemPaddingBottom);
+        itemLayout.setMinimumWidth(minItemWidth);
+        try {
+            if (foregroundDrawable != 0)
+                ((FrameLayout) itemLayout).setForeground(ContextCompat.getDrawable(getContext(), foregroundDrawable));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        itemLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isInSelectMode) {
+                    handleSelection(item);
+                } else {
+                    handleClick(item);
+                }
+            }
+        });
+        return itemLayout;
+    }
+
+    private void decorateItemTextView(TextView textView) {
+        textView.setTextColor(itemTextColor);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
+        textView.setCompoundDrawablePadding(itemDrawablePadding);
+        textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
+        if (typeface != null) textView.setTypeface(typeface);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = itemTextGravity;
+        textView.setLayoutParams(params);
+        textView.measure(0, 0);
+    }
+
+    private LayoutParams getItemLayoutParams() {
+        LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        itemParams.bottomMargin = rowMargin;
+        itemParams.topMargin = rowMargin;
+        itemParams.leftMargin = itemMargin;
+        itemParams.rightMargin = itemMargin;
+        itemParams.weight = rowMode;
+        return itemParams;
+    }
+
+    private void handleSelection(ItemData item) {
+        item.select();
+        if (selectListener != null) {
+            if (item.data == null) {
+                selectListener.onItemSelected(item.title.toString());
+            } else {
+                selectListener.onItemSelected(item.data);
+            }
+        }
+    }
+
+    private void handleClick(ItemData item) {
+        if (clickListener != null) {
+            if (item.data == null) {
+                clickListener.onItemClicked(item.title.toString());
+            } else {
+                clickListener.onItemClicked(item.data);
+            }
+        }
+    }
+
     private class ItemData<T> {
         protected T data;
 
@@ -499,14 +511,25 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    /**
+     * Listener used to handle item click events.
+     */
     public interface TagsClickListener {
         void onItemClicked(Object item);
     }
 
+    /**
+     * Listener used to handle item selection events.
+     */
     public interface TagsSelectListener {
         void onItemSelected(Object item);
     }
 
+    /**
+     * Prepare the formatting and appearance of data to be displayed on each item.
+     * As it returns {@link CharSequence}, item text can be represented as a {@link android.text.SpannableString}.
+     * Avoid using spans which may produce item width change (such as {@link android.text.style.BulletSpan} or {@link android.text.style.RelativeSizeSpan})
+     */
     public interface DataTransform<T> {
         CharSequence prepare(T item);
     }
