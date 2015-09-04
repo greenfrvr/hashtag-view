@@ -21,7 +21,7 @@ dependencies {
     compile 'com.github.greenfrvr:hashtag-view:1.0.0@aar'
 }
 ```
-In case of any issues with jCenter (library can't be resolved)
+Library available on both jCenter and Maven Central, but in case of any issues (library can't be resolved) use Bintray repo.
 
 Add repository to your app's build.gradle file:
 ```Gradle
@@ -40,7 +40,7 @@ First of all there are two ways to fill `HashtagView` with data.
 1. If you need only displaying your data you can use `HashtagView.setData(List<String> data);` method.
 2. If you want some more complex behavior or you want to use your data models, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer)` method.
 
-Few words about how it works. First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
+First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
 For example you have model 
 
 ```java
@@ -132,5 +132,26 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
 Also you can set up custom typeface by `HashtagView.setTypeface(Typeface)`.
 If you want to use some `<selector>` backgrounds you can set `tagBackground` property, `tagForeground` property can be used in case if you want to use `<ripple>` drawables.
 
+## Events
+There are two type of events that can be handled by `HashtagView`.
 
+- **Item click event**. Setting up item click listener 
+```java
+HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
+            @Override
+            public void onItemClicked(Object item) {
+              Person p = (Person) item;
+            }
+        });
+```
+- **Item selection event**. Setting up item click listener 
+```java
+HashtagView.setOnTagSelectListener(new HashtagView.TagsSelectListener() {
+            @Override
+            public void onItemSelected(Object item) {
+              Person p = (Person) item;
+            }
+        });
+```
+Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. 
         
