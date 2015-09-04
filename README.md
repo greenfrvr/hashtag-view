@@ -24,6 +24,7 @@ dependencies {
 Library available on both jCenter and Maven Central, but in case of any issues (library can't be resolved) use Bintray repo.
 
 Add repository to your app's build.gradle file:
+
 ```Gradle
 repositories {
     maven {
@@ -52,6 +53,7 @@ public class Person {
 }
 ```
 Now when passing list of `Person`'s, we implementing `DataTransform` interface
+
 ```java
 HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
     @Override
@@ -136,6 +138,7 @@ If you want to use some `<selector>` backgrounds you can set `tagBackground` pro
 There are two type of events that can be handled by `HashtagView`.
 
 - **Item click event**. 
+
 Setting up item click listener 
 
 ```java
@@ -147,6 +150,7 @@ HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
         });
 ```
 - **Item selection event**. 
+
 Setting up item click listener 
 
 ```java
@@ -157,5 +161,5 @@ HashtagView.setOnTagSelectListener(new HashtagView.TagsSelectListener() {
             }
         });
 ```
-Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. 
+Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. Also only one listener can be used at a time, i.e. if widget is in `selectionMode`  then `HashtagView.TagsSelectListener` will handle click events, but not `HashtagView.TagsClickListener`.
         
