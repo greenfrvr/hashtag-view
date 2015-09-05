@@ -1,4 +1,7 @@
 # HashtagView
+
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-HashtagView-green.svg?style=flat)](https://android-arsenal.com/details/1/2447)
+
 Fully customizable widget for representing data like hashtags collection and similiar.
 
 ![sample1](https://github.com/greenfrvr/hashtag-view/blob/master/screenshots/screen1.png)
