@@ -32,6 +32,12 @@
             <enum name="right" value="5"/>
             <enum name="center" value="17"/>
         </attr>
+        <attr name="rowDistribution" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="middle" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="random" value="3"/>
+        </attr>
         <attr name="rowMode" format="enum">
             <enum name="wrap" value="0"/>
             <enum name="stretch" value="1"/>

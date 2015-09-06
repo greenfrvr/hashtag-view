@@ -31,8 +31,8 @@ import com.google.common.collect.Multimap;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -58,6 +58,16 @@ public class HashtagView extends LinearLayout {
     public static final int MODE_STRETCH = 1;
     public static final int MODE_EQUAL = 2;
 
+    @IntDef({DISTRIBUTION_LEFT, DISTRIBUTION_MIDDLE, DISTRIBUTION_RIGHT, DISTRIBUTION_RANDOM})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface RowDistribution {
+    }
+
+    public static final int DISTRIBUTION_LEFT = 0;
+    public static final int DISTRIBUTION_MIDDLE = 1;
+    public static final int DISTRIBUTION_RIGHT = 2;
+    public static final int DISTRIBUTION_RANDOM = 3;
+
     @IntDef({ELLIPSIZE_START, ELLIPSIZE_MIDDLE, ELLIPSIZE_END, ELLIPSIZE_MARQUEE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Ellipsize {
@@ -81,8 +91,6 @@ public class HashtagView extends LinearLayout {
     private final LayoutParams itemLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private final FrameLayout.LayoutParams itemFrameParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-    private final ItemComparator comparator = new ItemComparator();
-
     private TagsClickListener clickListener;
     private TagsSelectListener selectListener;
 
@@ -104,6 +112,7 @@ public class HashtagView extends LinearLayout {
 
     private int rowMargin;
     private int rowGravity;
+    private int rowDistribution;
     private int rowMode;
     private int backgroundDrawable;
     private int foregroundDrawable;
@@ -271,6 +280,10 @@ public class HashtagView extends LinearLayout {
         this.rowMode = rowMode;
     }
 
+    public void setRowDistribution(@RowDistribution int rowDistribution) {
+        this.rowDistribution = rowDistribution;
+    }
+
     public void setBackgroundDrawable(@DrawableRes int backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
     }
@@ -291,7 +304,7 @@ public class HashtagView extends LinearLayout {
         this.typeface = typeface;
     }
 
-    public void setEllipsize(@Ellipsize int ellipsizeMode){
+    public void setEllipsize(@Ellipsize int ellipsizeMode) {
         itemTextEllipsize = ellipsizeMode;
     }
 
@@ -311,6 +324,7 @@ public class HashtagView extends LinearLayout {
             itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
             itemTextEllipsize = a.getInt(R.styleable.HashtagView_tagEllipsize, ELLIPSIZE_END);
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
+            rowDistribution = a.getInt(R.styleable.HashtagView_rowDistribution, DISTRIBUTION_RANDOM);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
@@ -359,7 +373,7 @@ public class HashtagView extends LinearLayout {
             totalItemsWidth += width;
         }
 
-        Collections.sort(data, comparator);
+        Collections.sort(data);
         Collections.sort(widthList, Collections.reverseOrder());
     }
 
@@ -393,11 +407,28 @@ public class HashtagView extends LinearLayout {
         for (Integer key : viewMap.keySet()) {
             ViewGroup rowLayout = getRowLayout(viewMap.get(key).size());
             addView(rowLayout);
+            applyDistribution(viewMap.get(key));
 
-            Collections.shuffle((List) viewMap.get(key));
             for (ItemData item : viewMap.get(key)) {
                 rowLayout.addView(item.view, itemLayoutParams);
             }
+        }
+    }
+
+    private void applyDistribution(Collection<ItemData> list) {
+        switch (rowDistribution) {
+            case DISTRIBUTION_LEFT:
+                Collections.sort((List) list);
+                break;
+            case DISTRIBUTION_MIDDLE:
+                SortUtil.symmetricSort((List) list);
+                break;
+            case DISTRIBUTION_RIGHT:
+                Collections.sort((List) list, Collections.reverseOrder());
+                break;
+            case DISTRIBUTION_RANDOM:
+                Collections.shuffle((List) list);
+                break;
         }
     }
 
@@ -508,44 +539,6 @@ public class HashtagView extends LinearLayout {
             } else {
                 clickListener.onItemClicked(item.data);
             }
-        }
-    }
-
-    private class ItemData<T> {
-        protected T data;
-
-        protected View view;
-        protected CharSequence title;
-        protected float width;
-        protected boolean isSelected;
-
-        public ItemData(CharSequence title) {
-            this.title = title;
-        }
-
-        public ItemData(T data, CharSequence title) {
-            this.data = data;
-            this.title = title;
-        }
-
-        public void select() {
-            isSelected = !isSelected;
-            view.setSelected(isSelected);
-            view.invalidate();
-        }
-
-        @Override
-        public String toString() {
-            return String.format("Item data: title - %s, width - %f", title, width);
-        }
-    }
-
-    private class ItemComparator implements Comparator<ItemData> {
-        @Override
-        public int compare(ItemData lhs, ItemData rhs) {
-            if (lhs == null || rhs == null) return 0;
-
-            return lhs.width > rhs.width ? -1 : (lhs.width == rhs.width ? 0 : 1);
         }
     }
 
