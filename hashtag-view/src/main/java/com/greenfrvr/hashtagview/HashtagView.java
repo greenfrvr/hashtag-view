@@ -12,7 +12,9 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,13 +49,33 @@ public class HashtagView extends LinearLayout {
     public static final int GRAVITY_RIGHT = Gravity.RIGHT;
     public static final int GRAVITY_CENTER = Gravity.CENTER;
 
-    @IntDef({MODE_WRAP, MODE_STRETCH})
+    @IntDef({MODE_WRAP, MODE_STRETCH, MODE_EQUAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface StretchMode {
     }
 
-    public static final int MODE_STRETCH = 1;
     public static final int MODE_WRAP = 0;
+    public static final int MODE_STRETCH = 1;
+    public static final int MODE_EQUAL = 2;
+
+    @IntDef({ELLIPSIZE_START, ELLIPSIZE_MIDDLE, ELLIPSIZE_END, ELLIPSIZE_MARQUEE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Ellipsize {
+    }
+
+    public static final int ELLIPSIZE_START = 0;
+    public static final int ELLIPSIZE_MIDDLE = 1;
+    public static final int ELLIPSIZE_END = 2;
+    public static final int ELLIPSIZE_MARQUEE = 3;
+
+    private static final SparseArray<TextUtils.TruncateAt> ellipsizeList = new SparseArray<>(4);
+
+    static {
+        ellipsizeList.put(ELLIPSIZE_START, TextUtils.TruncateAt.START);
+        ellipsizeList.put(ELLIPSIZE_MIDDLE, TextUtils.TruncateAt.MIDDLE);
+        ellipsizeList.put(ELLIPSIZE_END, TextUtils.TruncateAt.END);
+        ellipsizeList.put(ELLIPSIZE_MARQUEE, TextUtils.TruncateAt.MARQUEE);
+    }
 
     private final LayoutParams rowLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private final LayoutParams itemLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -77,6 +99,7 @@ public class HashtagView extends LinearLayout {
     private int minItemWidth;
     private int itemTextColor;
     private int itemTextGravity;
+    private int itemTextEllipsize;
     private float itemTextSize;
 
     private int rowMargin;
@@ -268,6 +291,10 @@ public class HashtagView extends LinearLayout {
         this.typeface = typeface;
     }
 
+    public void setEllipsize(@Ellipsize int ellipsizeMode){
+        itemTextEllipsize = ellipsizeMode;
+    }
+
     private void extractAttributes(AttributeSet attrs) {
         TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.HashtagView, 0, 0);
         try {
@@ -282,6 +309,7 @@ public class HashtagView extends LinearLayout {
             itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
 
             itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
+            itemTextEllipsize = a.getInt(R.styleable.HashtagView_tagEllipsize, ELLIPSIZE_END);
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
 
@@ -298,12 +326,15 @@ public class HashtagView extends LinearLayout {
         }
     }
 
-    private void prepareLayoutParams(){
+    private void prepareLayoutParams() {
         itemFrameParams.gravity = itemTextGravity;
 
         itemLayoutParams.leftMargin = itemMargin;
         itemLayoutParams.rightMargin = itemMargin;
-        itemLayoutParams.weight = rowMode;
+        itemLayoutParams.weight = rowMode > 0 ? 1 : 0;
+        if (MODE_EQUAL == rowMode) {
+            itemLayoutParams.width = 0;
+        }
 
         rowLayoutParams.topMargin = rowMargin;
         rowLayoutParams.bottomMargin = rowMargin;
@@ -373,7 +404,6 @@ public class HashtagView extends LinearLayout {
     private ViewGroup getRowLayout(int weightSum) {
         LinearLayout rowLayout = new LinearLayout(getContext());
         rowLayout.setLayoutParams(rowLayoutParams);
-//        rowLayout.setGravity(Gravity.CENTER);
         rowLayout.setOrientation(HORIZONTAL);
         rowLayout.setGravity(rowGravity);
         rowLayout.setWeightSum(weightSum);
@@ -453,6 +483,7 @@ public class HashtagView extends LinearLayout {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
         textView.setCompoundDrawablePadding(itemDrawablePadding);
         textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
+        textView.setEllipsize(ellipsizeList.get(itemTextEllipsize));
         if (typeface != null) textView.setTypeface(typeface);
 
         textView.setLayoutParams(itemFrameParams);

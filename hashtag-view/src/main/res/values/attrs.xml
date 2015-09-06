@@ -9,6 +9,12 @@
             <enum name="right" value="5"/>
             <enum name="center" value="17"/>
         </attr>
+        <attr name="tagEllipsize" format="enum">
+            <enum name="start" value="0"/>
+            <enum name="middle" value="1"/>
+            <enum name="end" value="2"/>
+            <enum name="marquee" value="3"/>
+        </attr>
         <attr name="tagBackground" format="color|reference"/>
         <attr name="tagForeground" format="color|reference"/>
         <attr name="tagDrawableLeft" format="reference"/>
@@ -29,6 +35,7 @@
         <attr name="rowMode" format="enum">
             <enum name="wrap" value="0"/>
             <enum name="stretch" value="1"/>
+            <enum name="equal" value="2"/>
         </attr>
         <attr name="selectionMode" format="boolean"/>
     </declare-styleable>
