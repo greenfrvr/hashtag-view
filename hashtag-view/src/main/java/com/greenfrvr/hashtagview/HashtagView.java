@@ -55,7 +55,10 @@ public class HashtagView extends LinearLayout {
     public static final int MODE_STRETCH = 1;
     public static final int MODE_WRAP = 0;
 
-    private final LayoutParams rowParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private final LayoutParams rowLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private final LayoutParams itemLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private final FrameLayout.LayoutParams itemFrameParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
     private final ItemComparator comparator = new ItemComparator();
 
     private TagsClickListener clickListener;
@@ -107,6 +110,7 @@ public class HashtagView extends LinearLayout {
         setGravity(Gravity.CENTER_HORIZONTAL);
 
         extractAttributes(attrs);
+        prepareLayoutParams();
 
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
     }
@@ -294,6 +298,17 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    private void prepareLayoutParams(){
+        itemFrameParams.gravity = itemTextGravity;
+
+        itemLayoutParams.leftMargin = itemMargin;
+        itemLayoutParams.rightMargin = itemMargin;
+        itemLayoutParams.weight = rowMode;
+
+        rowLayoutParams.topMargin = rowMargin;
+        rowLayoutParams.bottomMargin = rowMargin;
+    }
+
     private void wrap() {
         if (data == null || data.isEmpty()) return;
 
@@ -345,20 +360,24 @@ public class HashtagView extends LinearLayout {
         removeAllViews();
 
         for (Integer key : viewMap.keySet()) {
-            LinearLayout rowLayout = new LinearLayout(getContext());
-            rowLayout.setGravity(Gravity.CENTER);
-            rowLayout.setOrientation(HORIZONTAL);
-            rowLayout.setLayoutParams(rowParams);
-            rowLayout.setGravity(rowGravity);
-            rowLayout.setWeightSum(viewMap.get(key).size());
+            ViewGroup rowLayout = getRowLayout(viewMap.get(key).size());
             addView(rowLayout);
 
-            List<ItemData> itemsList = new ArrayList<>(viewMap.get(key));
-            Collections.shuffle(itemsList);
-            for (ItemData item : itemsList) {
-                rowLayout.addView(item.view, getItemLayoutParams());
+            Collections.shuffle((List) viewMap.get(key));
+            for (ItemData item : viewMap.get(key)) {
+                rowLayout.addView(item.view, itemLayoutParams);
             }
         }
+    }
+
+    private ViewGroup getRowLayout(int weightSum) {
+        LinearLayout rowLayout = new LinearLayout(getContext());
+        rowLayout.setLayoutParams(rowLayoutParams);
+//        rowLayout.setGravity(Gravity.CENTER);
+        rowLayout.setOrientation(HORIZONTAL);
+        rowLayout.setGravity(rowGravity);
+        rowLayout.setWeightSum(weightSum);
+        return rowLayout;
     }
 
     private int getViewWidth() {
@@ -436,20 +455,8 @@ public class HashtagView extends LinearLayout {
         textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
         if (typeface != null) textView.setTypeface(typeface);
 
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = itemTextGravity;
-        textView.setLayoutParams(params);
+        textView.setLayoutParams(itemFrameParams);
         textView.measure(0, 0);
-    }
-
-    private LayoutParams getItemLayoutParams() {
-        LayoutParams itemParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemParams.bottomMargin = rowMargin;
-        itemParams.topMargin = rowMargin;
-        itemParams.leftMargin = itemMargin;
-        itemParams.rightMargin = itemMargin;
-        itemParams.weight = rowMode;
-        return itemParams;
     }
 
     private void handleSelection(ItemData item) {
