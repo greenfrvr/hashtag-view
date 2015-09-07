@@ -5,16 +5,22 @@
     <string name="title_intro">Simple way to represent your collections data</string>
     <string name="title_events">Handle specific events</string>
     <string name="title_gravity">Play with the gravity as you want</string>
+    <string name="title_distribution">Adjust items weight distribution</string>
     <string name="title_spacing">Control spacing</string>
     <string name="title_styling">Express your style</string>
     <string name="title_contact">Sources and feedback</string>
 
-    <string name="section_gravity_left">Left</string>
-    <string name="section_gravity_center">Center</string>
-    <string name="section_gravity_right">Right</string>
+    <string name="section_gravity_left">Left gravity</string>
+    <string name="section_gravity_center">Center gravity</string>
+    <string name="section_gravity_right">Right gravity</string>
+    <string name="section_distribution_left">Left distribution</string>
+    <string name="section_distribution_middle">Middle distribution</string>
+    <string name="section_distribution_right">Right distribution</string>
+    <string name="section_distribution_random">Random distribution</string>
     <string name="section_spacing_paddings">Paddings</string>
     <string name="section_spacing_margins">Margins</string>
     <string name="section_spacing_stretch">Stretch mode</string>
+    <string name="section_spacing_equal">Equal mode</string>
     <string name="section_events_click">Click events</string>
     <string name="section_events_select">Selection mode</string>
     <string name="section_style_colors">Colors &amp; Typefaces</string>

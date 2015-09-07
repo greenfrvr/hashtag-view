@@ -8,14 +8,18 @@ import android.view.ViewGroup;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.greenfrvr.hashtagview.sample.R;
-import com.greenfrvr.hashtagview.sample.utils.Transformers;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.Bind;
 
 /**
  * Created by greenfrvr
  */
-public class SpacingSampleFragment extends BaseFragment {
+public class DistributionSampleFragment extends BaseFragment {
+    public static final List<String> DISTR_DATA = Arrays.asList("12345", "234567",
+            "1234", "456", "891", "59", "1", "3", "7", "9");
 
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
@@ -25,16 +29,16 @@ public class SpacingSampleFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_spacing_sample, container, false);
+        return inflater.inflate(R.layout.fragment_distribution_sample, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hashtagView1.setData(DATA, Transformers.HASH);
-        hashtagView2.setData(DATA, Transformers.HASH);
-        hashtagView3.setData(DATA, Transformers.HASH);
-        hashtagView4.setData(DATA, Transformers.HASH);
+        hashtagView1.setData(DISTR_DATA);
+        hashtagView2.setData(DISTR_DATA);
+        hashtagView3.setData(DISTR_DATA);
+        hashtagView4.setData(DISTR_DATA);
     }
 
 }

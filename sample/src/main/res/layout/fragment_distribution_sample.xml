@@ -22,56 +22,19 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="@string/title_spacing"/>
+                    android:text="@string/title_distribution"/>
 
                 <FrameLayout style="@style/Section.Container">
 
                     <TextView
                         style="@style/Section.Text"
-                        android:text="@string/section_spacing_paddings"/>
+                        android:text="@string/section_distribution_left"/>
                 </FrameLayout>
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/hashtags1"
                     style="@style/HashtagView"
-                    app:tagBackground="@drawable/item_bg_1"
-                    app:tagForeground="@drawable/flat_button_light"
-                    app:tagPaddingBottom="16dp"
-                    app:tagPaddingLeft="12dp"
-                    app:tagPaddingRight="12dp"
-                    app:tagPaddingTop="16dp"
-                    app:tagTextColor="#E5E5E5"/>
-
-                <FrameLayout style="@style/Section.Container">
-
-                    <TextView
-                        style="@style/Section.Text"
-                        android:text="@string/section_spacing_margins"/>
-                </FrameLayout>
-
-                <com.greenfrvr.hashtagview.HashtagView
-                    android:id="@+id/hashtags2"
-                    style="@style/HashtagView"
-                    app:rowMargin="8dp"
-                    app:tagBackground="@drawable/item_bg_1"
-                    app:tagForeground="@drawable/flat_button_light"
-                    app:tagMargin="8dp"
-                    app:tagPaddingBottom="@dimen/padding_vertical"
-                    app:tagPaddingLeft="@dimen/padding_horizontal"
-                    app:tagPaddingRight="@dimen/padding_horizontal"
-                    app:tagPaddingTop="@dimen/padding_vertical"
-                    app:tagTextColor="#E5E5E5"/>
-
-                <FrameLayout style="@style/Section.Container">
-
-                    <TextView
-                        style="@style/Section.Text"
-                        android:text="@string/section_spacing_stretch"/>
-                </FrameLayout>
-
-                <com.greenfrvr.hashtagview.HashtagView
-                    android:id="@+id/hashtags3"
-                    style="@style/HashtagView"
+                    app:rowDistribution="left"
                     app:rowMode="stretch"
                     app:tagBackground="@drawable/item_bg_1"
                     app:tagForeground="@drawable/flat_button_light"
@@ -85,13 +48,54 @@
 
                     <TextView
                         style="@style/Section.Text"
-                        android:text="@string/section_spacing_equal"/>
+                        android:text="@string/section_distribution_middle"/>
+                </FrameLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags2"
+                    style="@style/HashtagView"
+                    app:rowDistribution="middle"
+                    app:rowMode="stretch"
+                    app:tagBackground="@drawable/item_bg_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5"/>
+
+                <FrameLayout style="@style/Section.Container">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:text="@string/section_distribution_right"/>
+                </FrameLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags3"
+                    style="@style/HashtagView"
+                    app:rowDistribution="right"
+                    app:rowMode="stretch"
+                    app:tagBackground="@drawable/item_bg_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5"/>
+
+                <FrameLayout style="@style/Section.Container">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:text="@string/section_distribution_random"/>
                 </FrameLayout>
 
                 <com.greenfrvr.hashtagview.HashtagView
                     android:id="@+id/hashtags4"
                     style="@style/HashtagView"
-                    app:rowMode="equal"
+                    app:rowDistribution="random"
+                    app:rowMode="stretch"
                     app:tagBackground="@drawable/item_bg_1"
                     app:tagForeground="@drawable/flat_button_light"
                     app:tagPaddingBottom="@dimen/padding_vertical"
