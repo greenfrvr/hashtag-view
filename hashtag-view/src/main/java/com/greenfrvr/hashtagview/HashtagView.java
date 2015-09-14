@@ -117,7 +117,9 @@ public class HashtagView extends LinearLayout {
     private int backgroundDrawable;
     private int foregroundDrawable;
     private int leftDrawable;
+    private int leftSelectedDrawable;
     private int rightDrawable;
+    private int rightSelectedDrawable;
 
     private Typeface typeface;
 
@@ -330,7 +332,9 @@ public class HashtagView extends LinearLayout {
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
             leftDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableLeft, 0);
+            leftSelectedDrawable = a.getResourceId(R.styleable.HashtagView_tagSelectedDrawableLeft, 0);
             rightDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableRight, 0);
+            rightSelectedDrawable = a.getResourceId(R.styleable.HashtagView_tagSelectedDrawableRight, 0);
 
             itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
 
@@ -522,7 +526,7 @@ public class HashtagView extends LinearLayout {
     }
 
     private void handleSelection(ItemData item) {
-        item.select();
+        item.select(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
         if (selectListener != null) {
             if (item.data == null) {
                 selectListener.onItemSelected(item.title.toString());

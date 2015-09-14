@@ -2,6 +2,7 @@ package com.greenfrvr.hashtagview;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.TextView;
 
 
 /**
@@ -26,8 +27,10 @@ class ItemData<T> implements Comparable<ItemData> {
         this.title = title;
     }
 
-    public void select() {
+    public void select(int left, int leftSelected, int right, int rightSelected) {
         isSelected = !isSelected;
+        ((TextView) view.findViewById(R.id.text))
+                .setCompoundDrawablesWithIntrinsicBounds(isSelected ? leftSelected : left, 0, isSelected ? rightSelected : right, 0);
         view.setSelected(isSelected);
         view.invalidate();
     }
