@@ -22,6 +22,7 @@ public class StylingSampleFragment extends BaseFragment {
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
     protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
     protected @Bind(R.id.hashtags4) HashtagView hashtagView4;
+    protected @Bind(R.id.hashtags5) HashtagView hashtagView5;
 
     @Nullable
     @Override
@@ -37,5 +38,6 @@ public class StylingSampleFragment extends BaseFragment {
         hashtagView2.setData(DATA, Transformers.SPAN1);
         hashtagView3.setData(DATA, Transformers.SPAN2);
         hashtagView4.setData(DATA);
+        hashtagView5.setData(DATA);
     }
 }
