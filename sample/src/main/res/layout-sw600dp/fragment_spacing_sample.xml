@@ -37,10 +37,10 @@
                     style="@style/HashtagView"
                     app:tagBackground="@drawable/item_bg_1"
                     app:tagForeground="@drawable/flat_button_light"
-                    app:tagPaddingBottom="16dp"
-                    app:tagPaddingLeft="12dp"
-                    app:tagPaddingRight="12dp"
-                    app:tagPaddingTop="16dp"
+                    app:tagPaddingBottom="18dp"
+                    app:tagPaddingLeft="14dp"
+                    app:tagPaddingRight="14dp"
+                    app:tagPaddingTop="18dp"
                     app:tagTextColor="#E5E5E5"/>
 
                 <FrameLayout style="@style/Section.Container">

@@ -33,6 +33,7 @@
         <item name="android:paddingRight">12dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/regular_text</item>
     </style>
 
     <style name="CardContainer">
@@ -53,7 +54,7 @@
         <item name="android:paddingBottom">10dp</item>
         <item name="android:textColor">@android:color/primary_text_light</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/card_title</item>
     </style>
 
     <style name="HashtagView">
@@ -61,6 +62,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingTop">10dp</item>
+        <item name="tagTextSize">@dimen/regular_text</item>
     </style>
 
 </resources>
