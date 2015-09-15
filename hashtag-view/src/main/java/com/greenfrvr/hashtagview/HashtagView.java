@@ -298,6 +298,22 @@ public class HashtagView extends LinearLayout {
         this.foregroundDrawable = foregroundDrawable;
     }
 
+    public void setLeftDrawable(@DrawableRes int drawableRes) {
+        this.leftDrawable = drawableRes;
+    }
+
+    public void setLeftSelectedDrawable(@DrawableRes int drawableRes) {
+        this.leftSelectedDrawable = drawableRes;
+    }
+
+    public void setRightDrawable(@DrawableRes int drawableRes) {
+        this.rightDrawable = drawableRes;
+    }
+
+    public void setRightSelectedDrawable(@DrawableRes int drawableRes) {
+        this.rightSelectedDrawable = drawableRes;
+    }
+
     public void setInSelectMode(boolean selectMode) {
         isInSelectMode = selectMode;
     }
