@@ -22,7 +22,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.0.0@aar'
+    compile 'com.github.greenfrvr:hashtag-view:1.1.0@aar'
 }
 ```
 Library available on both jCenter and Maven Central, but in case of any issues (library can't be resolved) use Bintray repo.
@@ -88,6 +88,13 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
         <enum name="right" value="5"/>
         <enum name="center" value="17"/>
     </attr>
+    <!-- Item text ellipsize mode (just like in TextView). -->
+    <attr name="tagEllipsize" format="enum">
+        <enum name="start" value="0"/>
+        <enum name="middle" value="1"/>
+        <enum name="end" value="2"/>
+        <enum name="marquee" value="3"/>
+    </attr>
 ```
 ##### Background and drawables
 ```xml
@@ -97,8 +104,12 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="tagForeground" format="color|reference"/>
     <!-- Item left drawable resource. -->
     <attr name="tagDrawableLeft" format="reference"/>
+    <!-- Item selected state left drawable resource. -->
+    <attr name="tagSelectedDrawableLeft" format="reference"/>
     <!-- Item right drawable resource. -->
     <attr name="tagDrawableRight" format="reference"/>
+    <!-- Item selected state right drawable resource. -->
+    <attr name="tagSelectedDrawableRight" format="reference"/>
     <!-- Item drawable padding. -->
     <attr name="tagDrawablePadding" format="dimension"/>
 ```
@@ -127,10 +138,18 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
         <enum name="right" value="5"/>
         <enum name="center" value="17"/>
     </attr>
+    <!-- Defines row items distribution based on items weight. -->
+    <attr name="rowDistribution" format="enum">
+        <enum name="left" value="0"/>
+        <enum name="middle" value="1"/>
+        <enum name="right" value="2"/>
+        <enum name="random" value="3"/>
+    </attr>
     <!-- Defines if each item will wrap its content, or widget will fill all given width. -->
     <attr name="rowMode" format="enum">
         <enum name="wrap" value="0"/>
         <enum name="stretch" value="1"/>
+        <enum name="equal" value="2"/>
     </attr>
     <!-- Enables selection mode (don't forget to use <selectors>). -->
     <attr name="selectionMode" format="boolean"/>
