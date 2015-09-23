@@ -46,7 +46,7 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     }
 
     @Override
-    public void onItemSelected(Object item) {
+    public void onItemSelected(Object item, boolean isSelected) {
         Snackbar.make(coordinator, String.format("Selected items: %s", Arrays.toString(hashtagView2.getSelectedItems().toArray())), Snackbar.LENGTH_SHORT).show();
     }
 

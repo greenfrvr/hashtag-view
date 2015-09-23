@@ -545,9 +545,9 @@ public class HashtagView extends LinearLayout {
         item.select(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
         if (selectListener != null) {
             if (item.data == null) {
-                selectListener.onItemSelected(item.title.toString());
+                selectListener.onItemSelected(item.title.toString(), item.isSelected);
             } else {
-                selectListener.onItemSelected(item.data);
+                selectListener.onItemSelected(item.data, item.isSelected);
             }
         }
     }
@@ -573,7 +573,7 @@ public class HashtagView extends LinearLayout {
      * Listener used to handle item selection events.
      */
     public interface TagsSelectListener {
-        void onItemSelected(Object item);
+        void onItemSelected(Object item, boolean selected);
     }
 
     /**
