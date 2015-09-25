@@ -331,9 +331,9 @@ public class HashtagView extends LinearLayout {
         try {
             itemMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMargin, getResources().getDimensionPixelOffset(R.dimen.default_item_margin));
             itemPaddingLeft = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
-            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingLeft, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingRight = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingRight, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingTop = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingTop, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
+            itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingBottom, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
             itemDrawablePadding = a.getDimensionPixelOffset(R.styleable.HashtagView_tagDrawablePadding, 0);
             minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
             rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
