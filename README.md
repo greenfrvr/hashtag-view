@@ -22,9 +22,20 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.1.0@aar'
+    compile 'com.github.greenfrvr:hashtag-view:1.1.0'
 }
 ```
+
+or
+
+```Gradle
+dependencies {
+    compile ('com.github.greenfrvr:hashtag-view:1.1.0@aar'){
+        transitive=true
+    }
+}
+```
+
 Library available on both jCenter and Maven Central, but in case of any issues (library can't be resolved) use Bintray repo.
 
 Add repository to your app's build.gradle file:
