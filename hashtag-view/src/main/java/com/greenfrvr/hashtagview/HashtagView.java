@@ -105,6 +105,7 @@ public class HashtagView extends LinearLayout {
     private int itemPaddingBottom;
     private int itemDrawablePadding;
     private int minItemWidth;
+    private int maxItemWidth;
     private int itemTextColor;
     private int itemTextGravity;
     private int itemTextEllipsize;
@@ -185,7 +186,6 @@ public class HashtagView extends LinearLayout {
         }
     }
 
-
     /**
      * @return List of selected items. Consists of objects corresponding to custom data model defined by setData() method
      */
@@ -244,6 +244,14 @@ public class HashtagView extends LinearLayout {
 
     public void setMinItemWidthRes(@DimenRes int minWidth) {
         this.minItemWidth = getResources().getDimensionPixelOffset(minWidth);
+    }
+
+    public void setMaxItemWidth(int maxWidth) {
+        this.maxItemWidth = maxWidth;
+    }
+
+    public void setMaxItemWidthRes(@DimenRes int maxWidth) {
+        this.maxItemWidth = getResources().getDimensionPixelOffset(maxWidth);
     }
 
     public void setItemTextColor(int textColor) {
@@ -336,6 +344,7 @@ public class HashtagView extends LinearLayout {
             itemPaddingBottom = a.getDimensionPixelOffset(R.styleable.HashtagView_tagPaddingBottom, getResources().getDimensionPixelOffset(R.dimen.default_item_padding));
             itemDrawablePadding = a.getDimensionPixelOffset(R.styleable.HashtagView_tagDrawablePadding, 0);
             minItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMinWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
+            maxItemWidth = a.getDimensionPixelOffset(R.styleable.HashtagView_tagMaxWidth, getResources().getDimensionPixelOffset(R.dimen.min_item_width));
             rowMargin = a.getDimensionPixelOffset(R.styleable.HashtagView_rowMargin, getResources().getDimensionPixelOffset(R.dimen.default_row_margin));
             itemTextSize = a.getDimension(R.styleable.HashtagView_tagTextSize, getResources().getDimension(R.dimen.default_text_size));
 
@@ -386,6 +395,7 @@ public class HashtagView extends LinearLayout {
 
             float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
             width = Math.max(width, minItemWidth);
+            width = Math.min(width, getViewWidth() - 2 * totalOffset());
             item.view = view;
             item.width = width;
 
@@ -409,7 +419,7 @@ public class HashtagView extends LinearLayout {
             rowIteration:
             for (int i = 0; i < rowsQuantity; i++) {
                 for (ItemData item : data) {
-                    if (rowsWidth[i] + item.width < getViewWidth()) {
+                    if (rowsWidth[i] + item.width <= getViewWidth()) {
                         rowsWidth[i] += item.width;
                         viewMap.put(i, item);
                         data.remove(item);
@@ -493,7 +503,7 @@ public class HashtagView extends LinearLayout {
 
                 counter++;
                 for (Float item : widthList) {
-                    if (rowsWidth[i] + item < getWidth()) {
+                    if (rowsWidth[i] + item <= getWidth()) {
                         rowsWidth[i] += item;
                         widthList.remove(item);
                         continue rowIteration;
@@ -535,6 +545,7 @@ public class HashtagView extends LinearLayout {
         textView.setCompoundDrawablePadding(itemDrawablePadding);
         textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
         textView.setEllipsize(ellipsizeList.get(itemTextEllipsize));
+        if (maxItemWidth > 0) textView.setMaxWidth(maxItemWidth);
         if (typeface != null) textView.setTypeface(typeface);
 
         textView.setLayoutParams(itemFrameParams);

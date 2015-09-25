@@ -28,6 +28,7 @@
         <attr name="tagPaddingTop" format="dimension"/>
         <attr name="tagPaddingBottom" format="dimension"/>
         <attr name="tagMinWidth" format="dimension"/>
+        <attr name="tagMaxWidth" format="dimension"/>
         <attr name="rowMargin" format="dimension"/>
         <attr name="rowGravity" format="enum">
             <enum name="left" value="3"/>
