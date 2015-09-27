@@ -27,12 +27,15 @@ class ItemData<T> implements Comparable<ItemData> {
         this.title = title;
     }
 
-    public void select(int left, int leftSelected, int right, int rightSelected) {
-        isSelected = !isSelected;
-        ((TextView) view.findViewById(R.id.text))
-                .setCompoundDrawablesWithIntrinsicBounds(isSelected ? leftSelected : left, 0, isSelected ? rightSelected : right, 0);
+    void displaySelection(int left, int leftSelected, int right, int rightSelected) {
+        ((TextView) view.findViewById(R.id.text)).setCompoundDrawablesWithIntrinsicBounds(isSelected ? leftSelected : left, 0, isSelected ? rightSelected : right, 0);
         view.setSelected(isSelected);
         view.invalidate();
+    }
+
+    void select(int left, int leftSelected, int right, int rightSelected) {
+        isSelected = !isSelected;
+        displaySelection(left, leftSelected, right, rightSelected);
     }
 
     @Override
