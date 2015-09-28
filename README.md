@@ -22,7 +22,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.1.0'
+    compile 'com.github.greenfrvr:hashtag-view:1.1.1'
 }
 ```
 
@@ -30,7 +30,7 @@ or
 
 ```Gradle
 dependencies {
-    compile ('com.github.greenfrvr:hashtag-view:1.1.0@aar'){
+    compile ('com.github.greenfrvr:hashtag-view:1.1.1@aar'){
         transitive=true
     }
 }
@@ -51,14 +51,12 @@ This will reference Bintray's Maven repository that contains hashtags widget dir
 
 ## Data
 
-First of all there are two ways to fill `HashtagView` with data. 
+First of all there are three ways to fill `HashtagView` with data. 
 
 1. If you need only displaying your data you can use `HashtagView.setData(List<String> data);` method.
 2. If you want some more complex behavior or you want to use your data models, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer)` method.
-
-First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
+<br/>First you setting up some items collection, then you're telling how you want to display your data using `DataTransform` interface.
 For example you have model 
-
 ```java
 public class Person {
     int id;
@@ -68,7 +66,6 @@ public class Person {
 }
 ```
 Now when passing list of `Person`'s, we implementing `DataTransform` interface
-
 ```java
 HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
     @Override
@@ -79,10 +76,23 @@ HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
         spannableString.setSpan(new ForegroundColorSpan(color2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(color3), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
-        }
+    }
 };)
 ```
 As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.
+
+3. If you use widget in `selectionMode` and you want some items to be preselected, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer, DataSelector<T> selector)` method.
+<br/>This method works just like previous one, but additional interface `DataSelector` allows you to specify which items should be in selected state, before user can select something. 
+For example to select each second item it can be implemented like this:
+```java
+HashtagView.setData(persons, transformer, new HashtagView.DataSelector<Person>() {
+                                                      @Override
+                                                      public boolean preselect(Person item) {
+                                                          return persons.indexOf(item) % 2 == 1;
+                                                      }
+                                                  });
+```
+Notice that items won't be preselected if widget is not in `selectionMode`.
 
 ## Customizing
 All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
@@ -138,6 +148,8 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="tagPaddingBottom" format="dimension"/>
     <!-- Item minimal width. -->
     <attr name="tagMinWidth" format="dimension"/>
+    <!-- Item maximal width. -->
+    <attr name="tagMaxWidth" format="dimension"/>
     <!-- Row top and bottom margins, total distance between two rows is 2 * rowMargin. -->
     <attr name="rowMargin" format="dimension"/>
 ```
@@ -185,12 +197,12 @@ HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
 ```
 - **Item selection event**. 
 
-Setting up item click listener 
+Setting up item selection listener. From version 1.1.1 selection callback is returning selection state for exact item, i.e. it returns data model and its selection state, true - for selected state, false - for non-selected.
 
 ```java
 HashtagView.setOnTagSelectListener(new HashtagView.TagsSelectListener() {
             @Override
-            public void onItemSelected(Object item) {
+            public void onItemSelected(Object item, boolean selected) {
               Person p = (Person) item;
             }
         });
