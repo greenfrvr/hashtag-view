@@ -115,6 +115,7 @@ public class HashtagView extends LinearLayout {
     private int rowGravity;
     private int rowDistribution;
     private int rowMode;
+    private int tagRowsCount;
     private int backgroundDrawable;
     private int foregroundDrawable;
     private int leftDrawable;
@@ -374,6 +375,7 @@ public class HashtagView extends LinearLayout {
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
             rowDistribution = a.getInt(R.styleable.HashtagView_rowDistribution, DISTRIBUTION_RANDOM);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
+            tagRowsCount = a.getInt(R.styleable.HashtagView_tagRowsCount, 0);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
@@ -433,7 +435,7 @@ public class HashtagView extends LinearLayout {
     private void sort() {
         if (data == null || data.isEmpty()) return;
 
-        int rowsQuantity = evaluateRowsQuantity();
+        int rowsQuantity = tagRowsCount == 0 ? evaluateRowsQuantity() : tagRowsCount;
         final int[] rowsWidth = new int[rowsQuantity];
 
         viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
@@ -442,7 +444,7 @@ public class HashtagView extends LinearLayout {
             rowIteration:
             for (int i = 0; i < rowsQuantity; i++) {
                 for (ItemData item : data) {
-                    if (rowsWidth[i] + item.width <= getViewWidth()) {
+                    if (tagRowsCount > 0 || rowsWidth[i] + item.width <= getViewWidth()) {
                         rowsWidth[i] += item.width;
                         viewMap.put(i, item);
                         data.remove(item);

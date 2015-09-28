@@ -46,6 +46,7 @@
             <enum name="stretch" value="1"/>
             <enum name="equal" value="2"/>
         </attr>
+        <attr name="tagRowsCount" format="integer"/>
         <attr name="selectionMode" format="boolean"/>
     </declare-styleable>
 
