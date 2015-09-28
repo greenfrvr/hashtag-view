@@ -187,13 +187,13 @@ public class HashtagView extends LinearLayout {
      * to use {@link android.text.Spannable} for representing items label and define which items
      * should be preselected items.
      *
-     * @param list Array of user defined objects representing data collection.
+     * @param list        Array of user defined objects representing data collection.
      * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}
      *                    interface. Can be used for building label from several custom data model
      *                    fields or to prepare {@link android.text.Spannable} label representation.
-     * @param selector Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataSelector}
+     * @param selector    Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataSelector}
      *                    interface. Can be used to preselect some items.
-     * @param <T Custom data model
+     * @param <T>         Custom data model
      */
     public <T> void setData(@NonNull List<T> list, @Nullable DataTransform<T> transformer, @Nullable DataSelector<T> selector) {
         widthList = new ArrayList<>(list.size());
@@ -419,7 +419,8 @@ public class HashtagView extends LinearLayout {
             width = Math.min(width, getViewWidth() - 2 * totalOffset());
             item.view = view;
             item.width = width;
-            item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
+            if (isInSelectMode)
+                item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
 
             widthList.add(width);
             totalItemsWidth += width;
@@ -619,8 +620,8 @@ public class HashtagView extends LinearLayout {
     }
 
     /**
-     *  Allows to define whether item should be preselected or not. Returning true (or false) for exact
-     *  item will cause initial state of this item to be set to selected (or unselected).
+     * Allows to define whether item should be preselected or not. Returning true (or false) for exact
+     * item will cause initial state of this item to be set to selected (or unselected).
      */
     public interface DataSelector<T> {
         boolean preselect(T item);
