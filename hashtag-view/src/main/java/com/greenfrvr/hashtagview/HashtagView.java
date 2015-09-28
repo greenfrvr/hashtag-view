@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -132,10 +133,12 @@ public class HashtagView extends LinearLayout {
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            wrap();
-            sort();
-            draw();
-            getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
+            if (getWidth() > 0) {
+                wrap();
+                sort();
+                draw();
+                getViewTreeObserver().removeOnPreDrawListener(preDrawListener);
+            }
             return true;
         }
     };
