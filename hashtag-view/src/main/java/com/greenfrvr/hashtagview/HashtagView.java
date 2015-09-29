@@ -10,11 +10,9 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -130,6 +128,9 @@ public class HashtagView extends LinearLayout {
 
     private boolean isInSelectMode;
 
+    private DataTransform transformer = DefaultTransform.newInstance();
+    private DataSelector selector = DefaultSelector.newInstance();
+
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
@@ -160,10 +161,10 @@ public class HashtagView extends LinearLayout {
      *
      * @param list {@link java.lang.String} array representing data collection.
      */
-    public void setData(@NonNull List<String> list) {
+    public <T> void setData(@NonNull List<T> list) {
         widthList = new ArrayList<>(list.size());
         data = new ArrayList<>(list.size());
-        for (String item : list) {
+        for (T item : list) {
             data.add(new ItemData<>(item));
         }
     }
@@ -178,12 +179,9 @@ public class HashtagView extends LinearLayout {
      *                    fields or to prepare {@link android.text.Spannable} label representation.
      * @param <T>         Custom data model
      */
-    public <T> void setData(@NonNull List<T> list, @Nullable DataTransform<T> transformer) {
-        widthList = new ArrayList<>(list.size());
-        data = new ArrayList<>(list.size());
-        for (T item : list) {
-            data.add(transformer == null ? new ItemData<>(item.toString()) : new ItemData<>(item, transformer.prepare(item)));
-        }
+    public <T> void setData(@NonNull List<T> list, @NonNull DataTransform<T> transformer) {
+        this.transformer = transformer;
+        setData(list);
     }
 
     /**
@@ -199,16 +197,9 @@ public class HashtagView extends LinearLayout {
      *                    interface. Can be used to preselect some items.
      * @param <T>         Custom data model
      */
-    public <T> void setData(@NonNull List<T> list, @Nullable DataTransform<T> transformer, @Nullable DataSelector<T> selector) {
-        widthList = new ArrayList<>(list.size());
-        data = new ArrayList<>(list.size());
-        for (T item : list) {
-            ItemData itemData = transformer == null ? new ItemData<>(item.toString()) : new ItemData<>(item, transformer.prepare(item));
-            if (selector != null) {
-                itemData.isSelected = selector.preselect(item);
-            }
-            data.add(itemData);
-        }
+    public <T> void setData(@NonNull List<T> list, @NonNull DataTransform<T> transformer, @NonNull DataSelector<T> selector) {
+        this.selector = selector;
+        setData(list, transformer);
     }
 
     /**
@@ -218,7 +209,7 @@ public class HashtagView extends LinearLayout {
         List<Object> selected = new ArrayList<>();
         for (ItemData item : viewMap.values()) {
             if (item.isSelected)
-                selected.add(item.data != null ? item.data : item.title.toString());
+                selected.add(item.data);
         }
         return selected;
     }
@@ -416,7 +407,7 @@ public class HashtagView extends LinearLayout {
             View view = inflateItemView(item);
 
             TextView itemView = (TextView) view.findViewById(R.id.text);
-            itemView.setText(item.title);
+            itemView.setText(transformer.prepare(item.data));
             decorateItemTextView(itemView);
 
             float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
@@ -424,8 +415,7 @@ public class HashtagView extends LinearLayout {
             width = Math.min(width, getViewWidth() - 2 * totalOffset());
             item.view = view;
             item.width = width;
-            if (isInSelectMode)
-                item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
+            setItemPreselected(item);
 
             widthList.add(width);
             totalItemsWidth += width;
@@ -433,6 +423,14 @@ public class HashtagView extends LinearLayout {
 
         Collections.sort(data);
         Collections.sort(widthList, Collections.reverseOrder());
+    }
+
+    private void setItemPreselected(ItemData item) {
+        if (isInSelectMode) {
+            item.isSelected = selector.preselect(item.data);
+            item.decorateText(transformer);
+            item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
+        }
     }
 
     private void sort() {
@@ -582,22 +580,16 @@ public class HashtagView extends LinearLayout {
 
     private void handleSelection(ItemData item) {
         item.select(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
+        item.decorateText(transformer);
+
         if (selectListener != null) {
-            if (item.data == null) {
-                selectListener.onItemSelected(item.title.toString(), item.isSelected);
-            } else {
-                selectListener.onItemSelected(item.data, item.isSelected);
-            }
+            selectListener.onItemSelected(item.data, item.isSelected);
         }
     }
 
     private void handleClick(ItemData item) {
         if (clickListener != null) {
-            if (item.data == null) {
-                clickListener.onItemClicked(item.title.toString());
-            } else {
-                clickListener.onItemClicked(item.data);
-            }
+            clickListener.onItemClicked(item.data);
         }
     }
 
@@ -622,6 +614,16 @@ public class HashtagView extends LinearLayout {
      */
     public interface DataTransform<T> {
         CharSequence prepare(T item);
+    }
+
+    /**
+     * Prepare the formatting and appearance of data to be displayed on each item, for both selected and
+     * non-selected state.
+     * As it returns {@link CharSequence}, item text can be represented as a {@link android.text.SpannableString}.
+     * Avoid using spans which may produce item width change (such as {@link android.text.style.BulletSpan} or {@link android.text.style.RelativeSizeSpan})
+     */
+    public interface DataStateTransform<T> extends DataTransform<T> {
+        CharSequence prepareSelected(T item);
     }
 
     /**

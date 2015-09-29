@@ -14,17 +14,15 @@ class ItemData<T> implements Comparable<ItemData> {
     protected T data;
 
     protected View view;
-    protected CharSequence title;
     protected float width;
     protected boolean isSelected;
 
-    public ItemData(CharSequence title) {
-        this.title = title;
+    public ItemData(T data) {
+        this.data = data;
     }
 
-    public ItemData(T data, CharSequence title) {
-        this.data = data;
-        this.title = title;
+    void setText(CharSequence charSequence) {
+        ((TextView) view.findViewById(R.id.text)).setText(charSequence);
     }
 
     void displaySelection(int left, int leftSelected, int right, int rightSelected) {
@@ -38,9 +36,17 @@ class ItemData<T> implements Comparable<ItemData> {
         displaySelection(left, leftSelected, right, rightSelected);
     }
 
+    void decorateText(HashtagView.DataTransform<T> transformer) {
+        if (transformer instanceof HashtagView.DataStateTransform && isSelected) {
+            setText(((HashtagView.DataStateTransform<T>) transformer).prepareSelected(data));
+        } else {
+            setText(transformer.prepare(data));
+        }
+    }
+
     @Override
     public String toString() {
-        return String.format("Item data: title - %s, width - %f", title, width);
+        return String.format("Item data: title - %s, width - %f", data.toString(), width);
     }
 
     @Override
