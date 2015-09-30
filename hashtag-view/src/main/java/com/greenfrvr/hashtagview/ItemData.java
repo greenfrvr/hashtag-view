@@ -37,10 +37,12 @@ class ItemData<T> implements Comparable<ItemData> {
     }
 
     void decorateText(HashtagView.DataTransform<T> transformer) {
-        if (transformer instanceof HashtagView.DataStateTransform && isSelected) {
-            setText(((HashtagView.DataStateTransform<T>) transformer).prepareSelected(data));
-        } else {
-            setText(transformer.prepare(data));
+        if (transformer instanceof HashtagView.DataStateTransform) {
+            if (isSelected) {
+                setText(((HashtagView.DataStateTransform<T>) transformer).prepareSelected(data));
+            } else {
+                setText(transformer.prepare(data));
+            }
         }
     }
 

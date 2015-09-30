@@ -124,7 +124,7 @@ public class HashtagView extends LinearLayout {
 
     private Typeface typeface;
 
-    private float totalItemsWidth = 0;
+    private float totalItemsWidth;
 
     private boolean isInSelectMode;
 
@@ -152,7 +152,8 @@ public class HashtagView extends LinearLayout {
         extractAttributes(attrs);
         prepareLayoutParams();
 
-        getViewTreeObserver().addOnPreDrawListener(preDrawListener);
+        widthList = new ArrayList<>();
+        data = new ArrayList<>();
     }
 
     /**
@@ -162,11 +163,12 @@ public class HashtagView extends LinearLayout {
      * @param list {@link java.lang.String} array representing data collection.
      */
     public <T> void setData(@NonNull List<T> list) {
-        widthList = new ArrayList<>(list.size());
-        data = new ArrayList<>(list.size());
+        widthList.clear();
+        data.clear();
         for (T item : list) {
             data.add(new ItemData<>(item));
         }
+        getViewTreeObserver().addOnPreDrawListener(preDrawListener);
     }
 
     /**
@@ -402,6 +404,7 @@ public class HashtagView extends LinearLayout {
 
     private void wrap() {
         if (data == null || data.isEmpty()) return;
+        totalItemsWidth = 0;
 
         for (ItemData item : data) {
             View view = inflateItemView(item);
