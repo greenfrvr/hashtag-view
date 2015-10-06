@@ -90,8 +90,8 @@ public class HashtagView extends LinearLayout {
     private final LayoutParams itemLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private final FrameLayout.LayoutParams itemFrameParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-    private TagsClickListener clickListener;
-    private TagsSelectListener selectListener;
+    private List<TagsClickListener> clickListeners;
+    private List<TagsSelectListener> selectListeners;
 
     private List<Float> widthList;
     private List<ItemData> data;
@@ -217,21 +217,62 @@ public class HashtagView extends LinearLayout {
     }
 
     /**
-     * Set up single item click listener
+     * Adding single item click listener
      *
      * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsClickListener}
      */
-    public void setOnTagClickListener(TagsClickListener listener) {
-        this.clickListener = listener;
+    public void addOnTagClickListener(TagsClickListener listener) {
+        if (clickListeners == null) {
+            clickListeners = new ArrayList<>();
+        }
+        clickListeners.add(listener);
     }
 
     /**
-     * Set up selection items listener
+     * Removing single item click listener
+     *
+     * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsClickListener}
+     */
+    public void removeOnTagClickListener(TagsClickListener listener) {
+        if (clickListeners != null) {
+            clickListeners.remove(listener);
+        }
+    }
+
+    /**
+     * Adding selection items listener
      *
      * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsSelectListener}
      */
-    public void setOnTagSelectListener(TagsSelectListener listener) {
-        this.selectListener = listener;
+    public void addOnTagSelectListener(TagsSelectListener listener) {
+        if (selectListeners == null) {
+            selectListeners = new ArrayList<>();
+        }
+        selectListeners.add(listener);
+    }
+
+    /**
+     * Removing selection items listener
+     *
+     * @param listener {@link com.greenfrvr.hashtagview.HashtagView.TagsSelectListener}
+     */
+    public void removeOnTagSelectListener(TagsSelectListener listener) {
+        if (selectListeners != null) {
+            selectListeners.remove(listener);
+        }
+    }
+
+    /**
+     * Removing all defined listeners
+     */
+    public void removeListeners() {
+        if (clickListeners != null) {
+            clickListeners.clear();
+        }
+
+        if (selectListeners != null) {
+            selectListeners.clear();
+        }
     }
 
     public void setItemMargin(int itemMargin) {
@@ -585,14 +626,18 @@ public class HashtagView extends LinearLayout {
         item.select(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
         item.decorateText(transformer);
 
-        if (selectListener != null) {
-            selectListener.onItemSelected(item.data, item.isSelected);
+        if (selectListeners != null) {
+            for (TagsSelectListener listener : selectListeners) {
+                listener.onItemSelected(item.data, item.isSelected);
+            }
         }
     }
 
     private void handleClick(ItemData item) {
-        if (clickListener != null) {
-            clickListener.onItemClicked(item.data);
+        if (clickListeners != null) {
+            for (TagsClickListener listener : clickListeners) {
+                listener.onItemClicked(item.data);
+            }
         }
     }
 
