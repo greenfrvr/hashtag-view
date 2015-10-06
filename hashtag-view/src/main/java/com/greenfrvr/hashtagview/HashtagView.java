@@ -114,7 +114,7 @@ public class HashtagView extends LinearLayout {
     private int rowGravity;
     private int rowDistribution;
     private int rowMode;
-    private int tagRowsCount;
+    private int rowCount;
     private int backgroundDrawable;
     private int foregroundDrawable;
     private int leftDrawable;
@@ -134,7 +134,7 @@ public class HashtagView extends LinearLayout {
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            if (getWidth() > 0) {
+            if (getViewWidth() > 0) {
                 wrap();
                 sort();
                 draw();
@@ -318,7 +318,7 @@ public class HashtagView extends LinearLayout {
     }
 
     public void setItemTextColorRes(@ColorRes int textColor) {
-        this.itemTextColor = getResources().getColor(textColor);
+        this.itemTextColor = ContextCompat.getColor(getContext(), textColor);
     }
 
     public void setItemTextGravity(int itemTextGravity) {
@@ -351,6 +351,10 @@ public class HashtagView extends LinearLayout {
 
     public void setRowDistribution(@RowDistribution int rowDistribution) {
         this.rowDistribution = rowDistribution;
+    }
+
+    public void setRowCount(int count) {
+        if (count >= 0) this.rowCount = count;
     }
 
     public void setBackgroundDrawable(@DrawableRes int backgroundDrawable) {
@@ -412,7 +416,7 @@ public class HashtagView extends LinearLayout {
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
             rowDistribution = a.getInt(R.styleable.HashtagView_rowDistribution, DISTRIBUTION_RANDOM);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
-            tagRowsCount = a.getInt(R.styleable.HashtagView_tagRowsCount, 0);
+            rowCount = a.getInt(R.styleable.HashtagView_rowsQuantity, 0);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
@@ -480,7 +484,7 @@ public class HashtagView extends LinearLayout {
     private void sort() {
         if (data == null || data.isEmpty()) return;
 
-        int rowsQuantity = tagRowsCount == 0 ? evaluateRowsQuantity() : tagRowsCount;
+        int rowsQuantity = rowCount == 0 ? evaluateRowsQuantity() : rowCount;
         final int[] rowsWidth = new int[rowsQuantity];
 
         viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
@@ -489,7 +493,7 @@ public class HashtagView extends LinearLayout {
             rowIteration:
             for (int i = 0; i < rowsQuantity; i++) {
                 for (ItemData item : data) {
-                    if (tagRowsCount > 0 || rowsWidth[i] + item.width <= getViewWidth()) {
+                    if (rowCount > 0 || rowsWidth[i] + item.width <= getViewWidth()) {
                         rowsWidth[i] += item.width;
                         viewMap.put(i, item);
                         data.remove(item);
@@ -573,7 +577,7 @@ public class HashtagView extends LinearLayout {
 
                 counter++;
                 for (Float item : widthList) {
-                    if (rowsWidth[i] + item <= getWidth()) {
+                    if (rowsWidth[i] + item <= getViewWidth()) {
                         rowsWidth[i] += item;
                         widthList.remove(item);
                         continue rowIteration;
