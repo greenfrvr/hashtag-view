@@ -35,9 +35,10 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         hashtagView1.setData(DATA, Transformers.HASH);
-        hashtagView1.setOnTagClickListener(this);
+        hashtagView1.addOnTagClickListener(this);
+
         hashtagView2.setData(DATA, Transformers.HASH);
-        hashtagView2.setOnTagSelectListener(this);
+        hashtagView2.addOnTagSelectListener(this);
     }
 
     @Override

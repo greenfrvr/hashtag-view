@@ -1,5 +1,6 @@
 package com.greenfrvr.hashtagview.sample.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.SpannableString;
@@ -26,6 +27,16 @@ public class ContactsFragment extends BaseFragment {
     protected @Bind(R.id.contact) TextView contactTextView;
     protected @Bind(R.id.sources) TextView sourcesTextView;
 
+    private Listener listener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Listener) {
+            listener = (Listener) context;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +59,9 @@ public class ContactsFragment extends BaseFragment {
         spannable.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                IntentFactory.explore(getActivity(), getString(R.string.github));
+                if (listener != null) {
+                    listener.openGitHubPage();
+                }
             }
         }, spannable.toString().length() - 6, spannable.toString().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
@@ -63,5 +76,9 @@ public class ContactsFragment extends BaseFragment {
             }
         }, 8, 31, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
+    }
+
+    public interface Listener {
+        void openGitHubPage();
     }
 }
