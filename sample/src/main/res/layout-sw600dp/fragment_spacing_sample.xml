@@ -101,6 +101,33 @@
                     app:tagPaddingTop="@dimen/padding_vertical"
                     app:tagTextColor="#E5E5E5"/>
 
+                <FrameLayout style="@style/Section.Container">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:text="@string/section_spacing_horizontal"/>
+                </FrameLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:overScrollMode="ifContentScrolls">
+
+                    <com.greenfrvr.hashtagview.HashtagView
+                        android:id="@+id/hashtags5"
+                        style="@style/HashtagView"
+                        app:rowMode="stretch"
+                        app:rowsQuantity="2"
+                        app:tagBackground="@drawable/item_bg_1"
+                        app:tagForeground="@drawable/flat_button_light"
+                        app:tagPaddingBottom="@dimen/padding_vertical"
+                        app:tagPaddingLeft="@dimen/padding_horizontal"
+                        app:tagPaddingRight="@dimen/padding_horizontal"
+                        app:tagPaddingTop="@dimen/padding_vertical"
+                        app:tagTextColor="#E5E5E5"/>
+                </HorizontalScrollView>
+
                 <include layout="@layout/layout_buttons"/>
 
             </LinearLayout>

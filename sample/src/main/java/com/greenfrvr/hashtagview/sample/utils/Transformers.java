@@ -6,6 +6,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.SuperscriptSpan;
 
@@ -21,6 +22,23 @@ public class Transformers {
         public CharSequence prepare(String item) {
             SpannableString spannableString = new SpannableString("#" + item);
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#85F5F5F5")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
+        }
+    };
+
+    public static final HashtagView.DataTransform<String> HASH_SELECTED = new HashtagView.DataStateTransform<String>() {
+        @Override
+        public CharSequence prepare(String item) {
+            SpannableString spannableString = new SpannableString("#" + item);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#85F5F5F5")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
+        }
+
+        @Override
+        public CharSequence prepareSelected(String item) {
+            SpannableString spannableString = new SpannableString("#" + item);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#85F5F5F5")), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spannableString;
         }
     };

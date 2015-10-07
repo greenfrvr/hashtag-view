@@ -21,12 +21,13 @@
     <string name="section_spacing_margins">Margins</string>
     <string name="section_spacing_stretch">Stretch mode</string>
     <string name="section_spacing_equal">Equal mode</string>
+    <string name="section_spacing_horizontal">Horizontal mode</string>
     <string name="section_events_click">Click events</string>
     <string name="section_events_select">Selection mode</string>
     <string name="section_style_colors">Colors &amp; Typefaces</string>
     <string name="section_style_spans">Spannables &amp; Backgrounds</string>
     <string name="section_style_drawables">Drawables</string>
-    <string name="section_style_selection_drawables">Selection drawables</string>
+    <string name="section_style_selection_drawables">Selection drawables &amp; spannables</string>
 
     <string name="contact">Contact greenfrvr.dev@gmail.com for any ideas or suggestions</string>
     <string name="sources">All sources available on GitHub</string>

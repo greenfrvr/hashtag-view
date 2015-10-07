@@ -8,12 +8,12 @@ import java.util.ListIterator;
  */
 final class SortUtil {
 
-    private SortUtil(){
+    private SortUtil() {
         throw new AssertionError();
     }
 
     public static <T> void symmetricSort(List<T> list) {
-        T[] array = (T[]) new Object[list.size()];
+        @SuppressWarnings("unchecked") T[] array = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             if (i % 2 == 0) {
                 array[(list.size() - i) / 2 + (list.size() % 2 - 1)] = list.get(i);

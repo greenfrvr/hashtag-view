@@ -1,5 +1,6 @@
 package com.greenfrvr.hashtagview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -44,8 +45,8 @@ public class HashtagView extends LinearLayout {
     public @interface GravityMode {
     }
 
-    public static final int GRAVITY_LEFT = Gravity.LEFT;
-    public static final int GRAVITY_RIGHT = Gravity.RIGHT;
+    @SuppressLint("RtlHardcoded") public static final int GRAVITY_LEFT = Gravity.LEFT;
+    @SuppressLint("RtlHardcoded") public static final int GRAVITY_RIGHT = Gravity.RIGHT;
     public static final int GRAVITY_CENTER = Gravity.CENTER;
 
     @IntDef({MODE_WRAP, MODE_STRETCH, MODE_EQUAL})
@@ -134,7 +135,7 @@ public class HashtagView extends LinearLayout {
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
-            if (getViewWidth() > 0) {
+            if (isPrepared()) {
                 wrap();
                 sort();
                 draw();
@@ -445,6 +446,10 @@ public class HashtagView extends LinearLayout {
 
         rowLayoutParams.topMargin = rowMargin;
         rowLayoutParams.bottomMargin = rowMargin;
+    }
+
+    private boolean isPrepared(){
+        return getViewWidth() > 0 || rowCount > 0;
     }
 
     private void wrap() {

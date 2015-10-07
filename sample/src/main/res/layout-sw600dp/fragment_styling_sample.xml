@@ -118,6 +118,20 @@
                     app:tagSelectedDrawableRight="@drawable/ic_done_white_18dp"
                     app:tagTextColor="#E5E5E5"/>
 
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags6"
+                    style="@style/HashtagView"
+                    app:rowGravity="center"
+                    app:rowMode="stretch"
+                    app:selectionMode="true"
+                    app:tagBackground="@drawable/item_bg_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5"/>
+
                 <include layout="@layout/layout_buttons"/>
 
             </LinearLayout>
