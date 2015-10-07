@@ -1,5 +1,7 @@
 # HashtagView
 
+[![Join the chat at https://gitter.im/greenfrvr/hashtag-view](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/greenfrvr/hashtag-view?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-HashtagView-green.svg?style=flat)](https://android-arsenal.com/details/1/2447)
 [![Android Gems](http://www.android-gems.com/badge/greenfrvr/hashtag-view.svg?branch=master)](http://www.android-gems.com/lib/greenfrvr/hashtag-view)
 
