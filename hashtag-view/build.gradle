@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.2.0"
     }
     buildTypes {
         release {
@@ -39,7 +39,7 @@ ext {
     siteUrl = 'https://bintray.com/greenfrvr/maven/hashtag-view'
     gitUrl = 'https://github.com/greenfrvr/hashtag-view.git'
 
-    libraryVersion = '1.1.1'
+    libraryVersion = '1.2.0'
 
     developerId = 'greenfrvr'
     developerName = 'Artsiom Grintsevich'

@@ -177,7 +177,8 @@ public class HashtagView extends LinearLayout {
      * to use {@link android.text.Spannable} for representing items label.
      *
      * @param list        Array of user defined objects representing data collection.
-     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}
+     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}  or
+     *                    {@link com.greenfrvr.hashtagview.HashtagView.DataStateTransform}
      *                    interface. Can be used for building label from several custom data model
      *                    fields or to prepare {@link android.text.Spannable} label representation.
      * @param <T>         Custom data model
@@ -193,7 +194,8 @@ public class HashtagView extends LinearLayout {
      * should be preselected items.
      *
      * @param list        Array of user defined objects representing data collection.
-     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform}
+     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform} or
+     *                    {@link com.greenfrvr.hashtagview.HashtagView.DataStateTransform}
      *                    interface. Can be used for building label from several custom data model
      *                    fields or to prepare {@link android.text.Spannable} label representation.
      * @param selector    Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataSelector}
@@ -203,6 +205,17 @@ public class HashtagView extends LinearLayout {
     public <T> void setData(@NonNull List<T> list, @NonNull DataTransform<T> transformer, @NonNull DataSelector<T> selector) {
         this.selector = selector;
         setData(list, transformer);
+    }
+
+    /**
+     * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform} or
+     *                    {@link com.greenfrvr.hashtagview.HashtagView.DataStateTransform}
+     *                    interface. Can be used for building label from several custom data model
+     *                    fields or to prepare {@link android.text.Spannable} label representation.
+     * @param <T>         Custom data model
+     */
+    public <T> void setTransformer(@NonNull DataTransform<T> transformer) {
+        this.transformer = transformer;
     }
 
     /**
@@ -448,7 +461,7 @@ public class HashtagView extends LinearLayout {
         rowLayoutParams.bottomMargin = rowMargin;
     }
 
-    private boolean isPrepared(){
+    private boolean isPrepared() {
         return getViewWidth() > 0 || rowCount > 0;
     }
 
