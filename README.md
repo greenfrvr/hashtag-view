@@ -24,7 +24,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.1.1'
+    compile 'com.github.greenfrvr:hashtag-view:1.2.0'
 }
 ```
 
@@ -32,7 +32,7 @@ or
 
 ```Gradle
 dependencies {
-    compile ('com.github.greenfrvr:hashtag-view:1.1.1@aar'){
+    compile ('com.github.greenfrvr:hashtag-view:1.2.0@aar'){
         transitive=true
     }
 }
@@ -75,8 +75,8 @@ HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
         String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
         SpannableString spannableString = new SpannableString(label);
         spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ForegroundColorSpan(color2), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ForegroundColorSpan(color3), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 };)
@@ -95,6 +95,29 @@ HashtagView.setData(persons, transformer, new HashtagView.DataSelector<Person>()
                                                   });
 ```
 Notice that items won't be preselected if widget is not in `selectionMode`.
+<br/>Also while in `selectionMode` you can use `HashtagView.DataStateTransform` instead of `HashtagView.DataTransform`. `DataStateTransform` allows you to define how your items will be displayed in selected state, for example you can define different `Spannable` representations for selected and non-selected states. *(Take a look at "styles sample" in demo app)*
+```java
+HashtagView.DataTransform<String> stateTransform = new HashtagView.DataStateTransform<String>() {
+        @Override
+            public CharSequence prepare(Person item) {
+                String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+                SpannableString spannableString = new SpannableString(label);
+                spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                return spannableString;
+            }
+        @Override
+        public CharSequence prepareSelected(Person item) {
+            String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+            SpannableString spannableString = new SpannableString(label);
+            spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(color1), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new StrikethroughSpan(), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannableString;
+        }
+    };
+```
 
 ## Customizing
 All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
@@ -176,6 +199,8 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
         <enum name="stretch" value="1"/>
         <enum name="equal" value="2"/>
     </attr>
+    <!-- Defines fixed rows quantity, can be considered as horizontal mode (require HorizontalScrollView wrapping)-->
+    <attr name="rowsQuantity" format="integer"/>
     <!-- Enables selection mode (don't forget to use <selectors>). -->
     <attr name="selectionMode" format="boolean"/>
 ```
@@ -190,7 +215,7 @@ There are two type of events that can be handled by `HashtagView`.
 Setting up item click listener 
 
 ```java
-HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
+HashtagView.addOnTagClickListener(new HashtagView.TagsClickListener() {
             @Override
             public void onItemClicked(Object item) {
               Person p = (Person) item;
@@ -202,12 +227,15 @@ HashtagView.setOnTagClickListener(new HashtagView.TagsClickListener() {
 Setting up item selection listener. From version 1.1.1 selection callback is returning selection state for exact item, i.e. it returns data model and its selection state, true - for selected state, false - for non-selected.
 
 ```java
-HashtagView.setOnTagSelectListener(new HashtagView.TagsSelectListener() {
+HashtagView.addOnTagSelectListener(new HashtagView.TagsSelectListener() {
             @Override
             public void onItemSelected(Object item, boolean selected) {
               Person p = (Person) item;
             }
         });
 ```
-Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. Also only one listener can be used at a time, i.e. if widget is in `selectionMode`  then `HashtagView.TagsSelectListener` will handle click events, but not `HashtagView.TagsClickListener`.
+Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. Also only one listener can be used at a time, i.e. if widget is in `selectionMode`  then `HashtagView.TagsSelectListener` will handle click events, but not `HashtagView.TagsClickListener`. 
+
+All listeners implemented using Observer pattern, so you can set multiple listeners for both types of events. To remove some specific listener use `HashtagView.removeOnTagClickListener(TagsClickListener listener)` or `HashtagView.removeOnTagSelectListener(TagsSelectListener listener)` or you can remove all available listeners by calling `HashtagView.removeListeners()`. 
+*Note: be attentive and do not let listener to remove itself.*
         
