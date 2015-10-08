@@ -81,8 +81,7 @@ HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
     }
 };)
 ```
-As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.
-
+As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.<br/>
 3. If you use widget in `selectionMode` and you want some items to be preselected, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer, DataSelector<T> selector)` method.
 <br/>This method works just like previous one, but additional interface `DataSelector` allows you to specify which items should be in selected state, before user can select something. 
 For example to select each second item it can be implemented like this:
