@@ -47,6 +47,11 @@ class ItemData<T> implements Comparable<ItemData> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return o instanceof ItemData && this.data.equals(((ItemData) o).data);
+    }
+
+    @Override
     public String toString() {
         return String.format("Item data: title - %s, width - %f", data.toString(), width);
     }

@@ -48,6 +48,7 @@
         </attr>
         <attr name="rowsQuantity" format="integer"/>
         <attr name="selectionMode" format="boolean"/>
+        <attr name="dynamicMode" format="boolean"/>
     </declare-styleable>
 
 </resources>

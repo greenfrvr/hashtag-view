@@ -1,5 +1,6 @@
 package com.greenfrvr.hashtagview;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -90,6 +91,7 @@ public class HashtagView extends LinearLayout {
     private final LayoutParams rowLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private final LayoutParams itemLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private final FrameLayout.LayoutParams itemFrameParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private LayoutTransition layoutTransition;
 
     private List<TagsClickListener> clickListeners;
     private List<TagsSelectListener> selectListeners;
@@ -128,6 +130,7 @@ public class HashtagView extends LinearLayout {
     private float totalItemsWidth;
 
     private boolean isInSelectMode;
+    private boolean isDynamic;
 
     private DataTransform transformer = DefaultTransform.newInstance();
     private DataSelector selector = DefaultSelector.newInstance();
@@ -152,6 +155,7 @@ public class HashtagView extends LinearLayout {
 
         extractAttributes(attrs);
         prepareLayoutParams();
+        prepareLayoutTransition();
 
         widthList = new ArrayList<>();
         data = new ArrayList<>();
@@ -205,6 +209,29 @@ public class HashtagView extends LinearLayout {
     public <T> void setData(@NonNull List<T> list, @NonNull DataTransform<T> transformer, @NonNull DataSelector<T> selector) {
         this.selector = selector;
         setData(list, transformer);
+    }
+
+    public <T> void addItem(@NonNull T item) {
+        if (!isDynamic) return;
+
+        if (viewMap != null) data.addAll(viewMap.values());
+        data.add(new ItemData<>(item));
+        widthList.clear();
+        viewMap.clear();
+
+        getViewTreeObserver().addOnPreDrawListener(preDrawListener);
+    }
+
+    public <T> void removeItem(@NonNull T item) {
+        if (!isDynamic || viewMap == null || viewMap.isEmpty()) return;
+
+        data.addAll(viewMap.values());
+        data.remove(new ItemData<>(item));
+        if (data.isEmpty()) removeAllViews();
+        widthList.clear();
+        viewMap.clear();
+
+        getViewTreeObserver().addOnPreDrawListener(preDrawListener);
     }
 
     /**
@@ -442,6 +469,7 @@ public class HashtagView extends LinearLayout {
             itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
 
             isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
+            isDynamic = a.getBoolean(R.styleable.HashtagView_dynamicMode, false);
         } finally {
             a.recycle();
         }
@@ -461,6 +489,14 @@ public class HashtagView extends LinearLayout {
         rowLayoutParams.bottomMargin = rowMargin;
     }
 
+    private void prepareLayoutTransition() {
+        if (isDynamic) {
+            layoutTransition = new LayoutTransition();
+            layoutTransition.setStagger(LayoutTransition.APPEARING, 250);
+            layoutTransition.setAnimateParentHierarchy(false);
+        }
+    }
+
     private boolean isPrepared() {
         return getViewWidth() > 0 || rowCount > 0;
     }
@@ -470,25 +506,28 @@ public class HashtagView extends LinearLayout {
         totalItemsWidth = 0;
 
         for (ItemData item : data) {
-            View view = inflateItemView(item);
-
-            TextView itemView = (TextView) view.findViewById(R.id.text);
-            itemView.setText(transformer.prepare(item.data));
-            decorateItemTextView(itemView);
-
-            float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
-            width = Math.max(width, minItemWidth);
-            width = Math.min(width, getViewWidth() - 2 * totalOffset());
-            item.view = view;
-            item.width = width;
-            setItemPreselected(item);
-
-            widthList.add(width);
-            totalItemsWidth += width;
+            wrapItem(item);
+            widthList.add(item.width);
+            totalItemsWidth += item.width;
         }
 
         Collections.sort(data);
         Collections.sort(widthList, Collections.reverseOrder());
+    }
+
+    private void wrapItem(ItemData item) {
+        View view = inflateItemView(item);
+
+        TextView itemView = (TextView) view.findViewById(R.id.text);
+        itemView.setText(transformer.prepare(item.data));
+        decorateItemTextView(itemView);
+
+        float width = itemView.getMeasuredWidth() + drawableMetrics(itemView) + totalOffset();
+        width = Math.max(width, minItemWidth);
+        width = Math.min(width, getViewWidth() - 2 * totalOffset());
+        item.view = view;
+        item.width = width;
+        setItemPreselected(item);
     }
 
     private void setItemPreselected(ItemData item) {
@@ -530,6 +569,7 @@ public class HashtagView extends LinearLayout {
             ViewGroup rowLayout = getRowLayout(viewMap.get(key).size());
             addView(rowLayout);
             applyDistribution(viewMap.get(key));
+            rowLayout.setLayoutTransition(layoutTransition);
 
             for (ItemData item : viewMap.get(key)) {
                 rowLayout.addView(item.view, itemLayoutParams);
