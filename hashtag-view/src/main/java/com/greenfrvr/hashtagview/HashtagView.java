@@ -211,24 +211,34 @@ public class HashtagView extends LinearLayout {
         setData(list, transformer);
     }
 
+    /**
+     * Dynamically adds new item to a widget.
+     * @param item Object representing new item to be added
+     * @param <T> Custom data model class
+     */
     public <T> void addItem(@NonNull T item) {
         if (!isDynamic) return;
 
-        if (viewMap != null) data.addAll(viewMap.values());
+        if (viewMap != null) {
+            data.addAll(viewMap.values());
+            viewMap.clear();
+        }
         data.add(new ItemData<>(item));
-        widthList.clear();
-        viewMap.clear();
 
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
     }
 
+    /**
+     * Dynamically removes given item from a widget if it is already presented in a widget.
+     * @param item Object representing item to be removed
+     * @param <T> Custom data model class
+     */
     public <T> void removeItem(@NonNull T item) {
         if (!isDynamic || viewMap == null || viewMap.isEmpty()) return;
 
         data.addAll(viewMap.values());
         data.remove(new ItemData<>(item));
         if (data.isEmpty()) removeAllViews();
-        widthList.clear();
         viewMap.clear();
 
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
@@ -503,6 +513,7 @@ public class HashtagView extends LinearLayout {
 
     private void wrap() {
         if (data == null || data.isEmpty()) return;
+        widthList.clear();
         totalItemsWidth = 0;
 
         for (ItemData item : data) {
