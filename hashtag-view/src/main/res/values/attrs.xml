@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="HashtagView">
-        <attr name="tagTextColor" format="color"/>
+        <attr name="tagTextColor" format="color|reference"/>
         <attr name="tagTextSize" format="dimension"/>
         <attr name="tagTextGravity" format="enum">
             <enum name="left" value="3"/>

@@ -3,6 +3,7 @@ package com.greenfrvr.hashtagview;
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -46,8 +47,10 @@ public class HashtagView extends LinearLayout {
     public @interface GravityMode {
     }
 
-    @SuppressLint("RtlHardcoded") public static final int GRAVITY_LEFT = Gravity.LEFT;
-    @SuppressLint("RtlHardcoded") public static final int GRAVITY_RIGHT = Gravity.RIGHT;
+    @SuppressLint("RtlHardcoded")
+    public static final int GRAVITY_LEFT = Gravity.LEFT;
+    @SuppressLint("RtlHardcoded")
+    public static final int GRAVITY_RIGHT = Gravity.RIGHT;
     public static final int GRAVITY_CENTER = Gravity.CENTER;
 
     @IntDef({MODE_WRAP, MODE_STRETCH, MODE_EQUAL})
@@ -100,6 +103,7 @@ public class HashtagView extends LinearLayout {
     private List<ItemData> data;
     private Multimap<Integer, ItemData> viewMap;
 
+    private ColorStateList itemTextColorStateList;
     private int itemMargin;
     private int itemPaddingLeft;
     private int itemPaddingRight;
@@ -108,7 +112,6 @@ public class HashtagView extends LinearLayout {
     private int itemDrawablePadding;
     private int minItemWidth;
     private int maxItemWidth;
-    private int itemTextColor;
     private int itemTextGravity;
     private int itemTextEllipsize;
     private float itemTextSize;
@@ -213,8 +216,9 @@ public class HashtagView extends LinearLayout {
 
     /**
      * Dynamically adds new item to a widget.
+     *
      * @param item Object representing new item to be added
-     * @param <T> Custom data model class
+     * @param <T>  Custom data model class
      */
     public <T> void addItem(@NonNull T item) {
         if (!isDynamic) return;
@@ -230,8 +234,9 @@ public class HashtagView extends LinearLayout {
 
     /**
      * Dynamically removes given item from a widget if it is already presented in a widget.
+     *
      * @param item Object representing item to be removed
-     * @param <T> Custom data model class
+     * @param <T>  Custom data model class
      */
     public <T> void removeItem(@NonNull T item) {
         if (!isDynamic || viewMap == null || viewMap.isEmpty()) return;
@@ -365,11 +370,20 @@ public class HashtagView extends LinearLayout {
     }
 
     public void setItemTextColor(int textColor) {
-        this.itemTextColor = textColor;
+        this.itemTextColorStateList = ColorStateList.valueOf(textColor);
     }
 
     public void setItemTextColorRes(@ColorRes int textColor) {
-        this.itemTextColor = ContextCompat.getColor(getContext(), textColor);
+        int colorValue = ContextCompat.getColor(getContext(), textColor);
+        this.itemTextColorStateList = ColorStateList.valueOf(colorValue);
+    }
+
+    public void setItemTextColorStateList(ColorStateList stateList) {
+        this.itemTextColorStateList = stateList;
+    }
+
+    public void setItemTextColorStateListRes(@ColorRes int colorStateRes) {
+        this.itemTextColorStateList = ContextCompat.getColorStateList(getContext(), colorStateRes);
     }
 
     public void setItemTextGravity(int itemTextGravity) {
@@ -476,7 +490,10 @@ public class HashtagView extends LinearLayout {
             rightDrawable = a.getResourceId(R.styleable.HashtagView_tagDrawableRight, 0);
             rightSelectedDrawable = a.getResourceId(R.styleable.HashtagView_tagSelectedDrawableRight, 0);
 
-            itemTextColor = a.getColor(R.styleable.HashtagView_tagTextColor, Color.BLACK);
+            itemTextColorStateList = a.getColorStateList(R.styleable.HashtagView_tagTextColor);
+            if (itemTextColorStateList == null) {
+                itemTextColorStateList = ColorStateList.valueOf(Color.BLACK);
+            }
 
             isInSelectMode = a.getBoolean(R.styleable.HashtagView_selectionMode, false);
             isDynamic = a.getBoolean(R.styleable.HashtagView_dynamicMode, false);
@@ -683,7 +700,7 @@ public class HashtagView extends LinearLayout {
     }
 
     private void decorateItemTextView(TextView textView) {
-        textView.setTextColor(itemTextColor);
+        textView.setTextColor(itemTextColorStateList);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
         textView.setCompoundDrawablePadding(itemDrawablePadding);
         textView.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, 0, rightDrawable, 0);
