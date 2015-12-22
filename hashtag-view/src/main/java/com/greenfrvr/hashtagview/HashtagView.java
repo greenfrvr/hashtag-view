@@ -173,6 +173,12 @@ public class HashtagView extends LinearLayout {
     public <T> void setData(@NonNull List<T> list) {
         widthList.clear();
         data.clear();
+
+        if (list.isEmpty()) {
+            removeAllViews();
+            return;
+        }
+
         for (T item : list) {
             data.add(new ItemData<>(item));
         }
@@ -454,6 +460,10 @@ public class HashtagView extends LinearLayout {
         isInSelectMode = selectMode;
     }
 
+    public void setDynamicMode(boolean dynamicMode) {
+        isDynamic = dynamicMode;
+    }
+
     public void setTypeface(Typeface typeface) {
         this.typeface = typeface;
     }
@@ -600,8 +610,16 @@ public class HashtagView extends LinearLayout {
             rowLayout.setLayoutTransition(layoutTransition);
 
             for (ItemData item : viewMap.get(key)) {
+                releaseParent(item.view);
                 rowLayout.addView(item.view, itemLayoutParams);
             }
+        }
+    }
+
+    private void releaseParent(View child) {
+        ViewGroup parent = (ViewGroup) child.getParent();
+        if (parent != null) {
+            parent.removeView(child);
         }
     }
 
