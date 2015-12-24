@@ -33,8 +33,10 @@ import com.google.common.collect.Multimap;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -102,6 +104,7 @@ public class HashtagView extends LinearLayout {
     private List<Float> widthList;
     private List<ItemData> data;
     private Multimap<Integer, ItemData> viewMap;
+    private SortState sortState = SortState.initState();
 
     private ColorStateList itemTextColorStateList;
     private int itemMargin;
@@ -579,20 +582,38 @@ public class HashtagView extends LinearLayout {
     private void sort() {
         if (data == null || data.isEmpty()) return;
 
-        int rowsQuantity = rowCount == 0 ? evaluateRowsQuantity() : rowCount;
-        final int[] rowsWidth = new int[rowsQuantity];
+        evaluateRowsQuantity();
 
-        viewMap = ArrayListMultimap.create(rowsQuantity, data.size());
+        final int[] rowWidths = new int[sortState.totalRows()];
+        viewMap = ArrayListMultimap.create(sortState.totalRows(), data.size());
 
-        while (!data.isEmpty()) {
-            rowIteration:
-            for (int i = 0; i < rowsQuantity; i++) {
-                for (ItemData item : data) {
-                    if (rowCount > 0 || rowsWidth[i] + item.width <= getViewWidth()) {
-                        rowsWidth[i] += item.width;
+        sortingLoop(0, sortState.rowCount, rowWidths, true);
+
+        if (sortState.hasExtraRows) {
+            sortingLoop(sortState.rowCount, sortState.totalRows(), rowWidths, false);
+            sortState.release();
+        }
+    }
+
+    private boolean extraCondition() {
+        return !(sortState.hasExtraRows && data.size() == sortState.extraCount);
+    }
+
+    private void sortingLoop(int start, int end, int[] widths, boolean hasExtra) {
+        while (!data.isEmpty() && (!hasExtra || extraCondition())) {
+            iteration:
+
+            for (int i = start; i < end; i++) {
+                Iterator<ItemData> iterator = data.iterator();
+
+                while(iterator.hasNext()) {
+                    ItemData item = iterator.next();
+                    if (rowCount > 0 || widths[i] + item.width <= getViewWidth()) {
+                        widths[i] += item.width;
                         viewMap.put(i, item);
-                        data.remove(item);
-                        continue rowIteration;
+                        iterator.remove();
+
+                        if (hasExtra) continue iteration;
                     }
                 }
             }
@@ -603,7 +624,10 @@ public class HashtagView extends LinearLayout {
         if (viewMap == null || viewMap.isEmpty()) return;
         removeAllViews();
 
-        for (Integer key : viewMap.keySet()) {
+        List<Integer> keys = new ArrayList<>(viewMap.keySet());
+        Collections.sort(keys);
+
+        for (Integer key : keys) {
             ViewGroup rowLayout = getRowLayout(viewMap.get(key).size());
             addView(rowLayout);
             applyDistribution(viewMap.get(key));
@@ -614,6 +638,7 @@ public class HashtagView extends LinearLayout {
                 rowLayout.addView(item.view, itemLayoutParams);
             }
         }
+        keys.clear();
     }
 
     private void releaseParent(View child) {
@@ -665,19 +690,28 @@ public class HashtagView extends LinearLayout {
         return drawablesWidth;
     }
 
-    private int evaluateRowsQuantity() {
-        if (widthList == null || widthList.isEmpty()) return 0;
+    private void evaluateRowsQuantity() {
+        if (widthList == null || widthList.isEmpty()) return;
+
+        if (rowCount > 0) {
+            sortState.preserveState(rowCount);
+            return;
+        }
 
         int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
         int[] rowsWidth = new int[rows];
         int iterationLimit = rows + widthList.size();
-
         int counter = 0;
+
+        sortState.preserveState(rows);
         while (!widthList.isEmpty()) {
             rowIteration:
             for (int i = 0; i < rows; i++) {
-                if (counter > iterationLimit)
-                    return rows + 1;
+                if (counter > iterationLimit) {
+                    sortState.preserveState(rows, true, widthList.size());
+                    widthList.clear();
+                    return;
+                }
 
                 counter++;
                 for (Float item : widthList) {
@@ -689,7 +723,6 @@ public class HashtagView extends LinearLayout {
                 }
             }
         }
-        return rows;
     }
 
     private View inflateItemView(final ItemData item) {
@@ -788,5 +821,42 @@ public class HashtagView extends LinearLayout {
      */
     public interface DataSelector<T> {
         boolean preselect(T item);
+    }
+
+    static class SortState {
+        boolean hasExtraRows = false;
+        int extraCount = 0;
+        int rowCount = 0;
+
+        public static SortState initState() {
+            return new SortState();
+        }
+
+        public int totalRows() {
+            return (hasExtraRows ? extraCount : 0) + rowCount;
+        }
+
+        public void preserveState(int rowCount, boolean needsExtraRow, int extraCount) {
+            this.rowCount = rowCount;
+            this.hasExtraRows = needsExtraRow;
+            this.extraCount = extraCount;
+        }
+
+        public void preserveState(int rowCount) {
+            preserveState(rowCount, false, 0);
+        }
+
+        public void release() {
+            preserveState(0);
+        }
+
+        @Override
+        public String toString() {
+            return "SortState{" +
+                    "hasExtraRows=" + hasExtraRows +
+                    ", extraCount=" + extraCount +
+                    ", rowCount=" + rowCount +
+                    '}';
+        }
     }
 }
