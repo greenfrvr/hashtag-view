@@ -24,7 +24,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.2.0'
+    compile 'com.github.greenfrvr:hashtag-view:1.2.1'
 }
 ```
 
@@ -32,7 +32,7 @@ or
 
 ```Gradle
 dependencies {
-    compile ('com.github.greenfrvr:hashtag-view:1.2.0@aar'){
+    compile ('com.github.greenfrvr:hashtag-view:1.2.1@aar'){
         transitive=true
     }
 }
@@ -202,6 +202,8 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="rowsQuantity" format="integer"/>
     <!-- Enables selection mode (don't forget to use <selectors>). -->
     <attr name="selectionMode" format="boolean"/>
+    <!-- Enables dynamic mode (allows to add/remove items dynamically). -->
+    <attr name="dynamicMode" format="boolean"/>
 ```
 Also you can set up custom typeface by `HashtagView.setTypeface(Typeface)`.
 If you want to use some `<selector>` backgrounds you can set `tagBackground` property, `tagForeground` property can be used in case if you want to use `<ripple>` drawables.
@@ -238,3 +240,9 @@ Both callbacks returns object of corresponding type defined in `HashtagView.setD
 All listeners implemented using Observer pattern, so you can set multiple listeners for both types of events. To remove some specific listener use `HashtagView.removeOnTagClickListener(TagsClickListener listener)` or `HashtagView.removeOnTagSelectListener(TagsSelectListener listener)` or you can remove all available listeners by calling `HashtagView.removeListeners()`. 
 *Note: be attentive and do not let listener to remove itself.*
         
+## Dynamic mode
+To be able add and remove tags dynamically you should set dynamic mode to `true` (via code or xml). After that you can use next methods: 
+- `HastagView.addItem()` 
+returns true if item added successfully, false if item can't be added (in case `HastagView` already contains such item)
+- `HastagView.removeItem()`
+returns true if item removed successfully, false if item can't be removed (in case `HashtagView` doesn't contain such item)
