@@ -228,34 +228,46 @@ public class HashtagView extends LinearLayout {
      *
      * @param item Object representing new item to be added
      * @param <T>  Custom data model class
+     * @return true if item was added successfully, false otherwise (for example the item
+     * has been already presented)
      */
-    public <T> void addItem(@NonNull T item) {
-        if (!isDynamic) return;
+    public <T> boolean addItem(@NonNull T item) {
+        if (!isDynamic) return false;
+
+        ItemData itemData = new ItemData<>(item);
+        if (viewMap.values().contains(itemData)) return false;
 
         if (viewMap != null) {
             data.addAll(viewMap.values());
             viewMap.clear();
         }
-        data.add(new ItemData<>(item));
+        data.add(itemData);
 
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
+        return true;
     }
 
     /**
      * Dynamically removes given item from a widget if it is already presented in a widget.
      *
      * @param item Object representing item to be removed
-     * @param <T>  Custom data model class
+     * @param <T> Custom data model class
+     * @return true if item was removed successfully, false otherwise (for example there
+     * was no item to remove)
      */
-    public <T> void removeItem(@NonNull T item) {
-        if (!isDynamic || viewMap == null || viewMap.isEmpty()) return;
+    public <T> boolean removeItem(@NonNull T item) {
+        if (!isDynamic || viewMap == null || viewMap.isEmpty()) return false;
+
+        ItemData itemData = new ItemData<>(item);
+        if (!viewMap.values().contains(itemData)) return false;
 
         data.addAll(viewMap.values());
-        data.remove(new ItemData<>(item));
+        data.remove(itemData);
         if (data.isEmpty()) removeAllViews();
         viewMap.clear();
 
         getViewTreeObserver().addOnPreDrawListener(preDrawListener);
+        return true;
     }
 
     /**
@@ -606,7 +618,7 @@ public class HashtagView extends LinearLayout {
             for (int i = start; i < end; i++) {
                 Iterator<ItemData> iterator = data.iterator();
 
-                while(iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     ItemData item = iterator.next();
                     if (rowCount > 0 || widths[i] + item.width <= getViewWidth()) {
                         widths[i] += item.width;
@@ -848,15 +860,6 @@ public class HashtagView extends LinearLayout {
 
         public void release() {
             preserveState(0);
-        }
-
-        @Override
-        public String toString() {
-            return "SortState{" +
-                    "hasExtraRows=" + hasExtraRows +
-                    ", extraCount=" + extraCount +
-                    ", rowCount=" + rowCount +
-                    '}';
         }
     }
 }
