@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
@@ -24,13 +24,13 @@
 
                 <TextView
                     style="@style/CardTitle"
-                    android:text="@string/title_events"/>
+                    android:text="@string/title_events" />
 
                 <FrameLayout style="@style/Section.Container">
 
                     <TextView
                         style="@style/Section.Text"
-                        android:text="@string/section_events_click"/>
+                        android:text="@string/section_events_click" />
                 </FrameLayout>
 
                 <com.greenfrvr.hashtagview.HashtagView
@@ -42,13 +42,13 @@
                     app:tagPaddingLeft="@dimen/padding_horizontal"
                     app:tagPaddingRight="@dimen/padding_horizontal"
                     app:tagPaddingTop="@dimen/padding_vertical"
-                    app:tagTextColor="#E5E5E5"/>
+                    app:tagTextColor="#E5E5E5" />
 
                 <FrameLayout style="@style/Section.Container">
 
                     <TextView
                         style="@style/Section.Text"
-                        android:text="@string/section_events_select"/>
+                        android:text="@string/section_events_select" />
                 </FrameLayout>
 
                 <com.greenfrvr.hashtagview.HashtagView
@@ -62,9 +62,53 @@
                     app:tagPaddingLeft="@dimen/padding_horizontal"
                     app:tagPaddingRight="@dimen/padding_horizontal"
                     app:tagPaddingTop="@dimen/padding_vertical"
-                    app:tagTextColor="#E5E5E5"/>
+                    app:tagTextColor="#E5E5E5" />
 
-                <include layout="@layout/layout_buttons"/>
+                <FrameLayout style="@style/Section.Container">
+
+                    <TextView
+                        style="@style/Section.Text"
+                        android:text="@string/section_events_dynamic" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/remove_tag"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/flat_button_dark"
+                        android:src="@drawable/ic_remove_circle_24dp"
+                        android:tint="@color/orange_600" />
+
+                    <ImageButton
+                        android:id="@+id/add_tag"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/flat_button_dark"
+                        android:src="@drawable/ic_add_circle_24dp"
+                        android:tint="@color/green_600" />
+
+                </LinearLayout>
+
+                <com.greenfrvr.hashtagview.HashtagView
+                    android:id="@+id/hashtags3"
+                    style="@style/HashtagView"
+                    app:rowMode="stretch"
+                    app:selectionMode="true"
+                    app:tagBackground="@drawable/item_bg_1"
+                    app:tagForeground="@drawable/flat_button_light"
+                    app:tagPaddingBottom="@dimen/padding_vertical"
+                    app:tagPaddingLeft="@dimen/padding_horizontal"
+                    app:tagPaddingRight="@dimen/padding_horizontal"
+                    app:tagPaddingTop="@dimen/padding_vertical"
+                    app:tagTextColor="#E5E5E5" />
+
+                <include layout="@layout/layout_buttons" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

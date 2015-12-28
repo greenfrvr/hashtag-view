@@ -24,7 +24,8 @@
     <string name="section_spacing_horizontal">Horizontal mode</string>
     <string name="section_events_click">Click events</string>
     <string name="section_events_select">Selection mode</string>
-    <string name="section_style_colors">Colors &amp; Typefaces</string>
+    <string name="section_events_dynamic">Dynamic mode</string>
+    <string name="section_style_colors">Color State List &amp; Typefaces</string>
     <string name="section_style_spans">Spannables &amp; Backgrounds</string>
     <string name="section_style_drawables">Drawables</string>
     <string name="section_style_selection_drawables">Selection drawables &amp; spannables</string>

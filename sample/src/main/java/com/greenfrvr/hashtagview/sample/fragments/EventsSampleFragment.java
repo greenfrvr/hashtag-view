@@ -15,6 +15,7 @@ import com.greenfrvr.hashtagview.sample.utils.Transformers;
 import java.util.Arrays;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Created by greenfrvr
@@ -24,6 +25,9 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
     protected @Bind(R.id.coordinator) CoordinatorLayout coordinator;
     protected @Bind(R.id.hashtags1) HashtagView hashtagView1;
     protected @Bind(R.id.hashtags2) HashtagView hashtagView2;
+    protected @Bind(R.id.hashtags3) HashtagView hashtagView3;
+
+    private int addedCount = 0;
 
     @Nullable
     @Override
@@ -39,6 +43,21 @@ public class EventsSampleFragment extends BaseFragment implements HashtagView.Ta
 
         hashtagView2.setData(DATA, Transformers.HASH);
         hashtagView2.addOnTagSelectListener(this);
+
+        hashtagView3.setData(DATA, Transformers.HASH);
+        hashtagView3.setDynamicMode(true) ;
+    }
+
+    @OnClick(R.id.add_tag) @SuppressWarnings("unused")
+    void addTag() {
+        String str = "new_tag_" + addedCount;
+        if (hashtagView3.addItem(str)) addedCount++;
+    }
+
+    @OnClick(R.id.remove_tag) @SuppressWarnings("unused")
+    void removeTag() {
+        String str = "new_tag_" + --addedCount;
+        if (!hashtagView3.removeItem(str)) ++addedCount;
     }
 
     @Override
