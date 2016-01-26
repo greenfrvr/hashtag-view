@@ -71,16 +71,16 @@ public class Person {
 Now when passing list of `Person`'s, we implementing `DataTransform` interface
 ```java
 HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
-    @Override
-    public CharSequence prepare(Person item) {
-        String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
-        SpannableString spannableString = new SpannableString(label);
-        spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannableString;
-    }
-};)
+      @Override
+      public CharSequence prepare(Person item) {
+          String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+          SpannableString spannableString = new SpannableString(label);
+          spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          return spannableString;
+      }
+});
 ```
 As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.<br/>
 3. If you use widget in `selectionMode` and you want some items to be preselected, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer, DataSelector<T> selector)` method.
@@ -88,35 +88,35 @@ As you may notice implementing `DataTransform.prepare()` method let you define `
 For example to select each second item it can be implemented like this:
 ```java
 HashtagView.setData(persons, transformer, new HashtagView.DataSelector<Person>() {
-                                                      @Override
-                                                      public boolean preselect(Person item) {
-                                                          return persons.indexOf(item) % 2 == 1;
-                                                      }
-                                                  });
+      @Override
+      public boolean preselect(Person item) {
+          return persons.indexOf(item) % 2 == 1;
+      }
+});
 ```
 Notice that items won't be preselected if widget is not in `selectionMode`.
 <br/>Also while in `selectionMode` you can use `HashtagView.DataStateTransform` instead of `HashtagView.DataTransform`. `DataStateTransform` allows you to define how your items will be displayed in selected state, for example you can define different `Spannable` representations for selected and non-selected states. *(Take a look at "styles sample" in demo app)*
 ```java
 HashtagView.DataTransform<String> stateTransform = new HashtagView.DataStateTransform<String>() {
-        @Override
-            public CharSequence prepare(Person item) {
-                String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
-                SpannableString spannableString = new SpannableString(label);
-                spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                return spannableString;
-            }
-        @Override
-        public CharSequence prepareSelected(Person item) {
-            String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
-            SpannableString spannableString = new SpannableString(label);
-            spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new ForegroundColorSpan(color1), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new StrikethroughSpan(), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return spannableString;
-        }
-    };
+      @Override
+      public CharSequence prepare(Person item) {
+          String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+          SpannableString spannableString = new SpannableString(label);
+          spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new ForegroundColorSpan(color1), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new ForegroundColorSpan(color2), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          return spannableString;
+      }
+      @Override
+      public CharSequence prepareSelected(Person item) {
+          String label = "@" + item.firstName.getCharAt(0) + item.midName.getCharAt(0) + item.lastName;
+          SpannableString spannableString = new SpannableString(label);
+          spannableString.setSpan(new SuperscriptSpan(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new ForegroundColorSpan(color1), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          spannableString.setSpan(new StrikethroughSpan(), 1, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+          return spannableString;
+      }
+};
 ```
 
 ## Customizing
@@ -218,11 +218,11 @@ Setting up item click listener
 
 ```java
 HashtagView.addOnTagClickListener(new HashtagView.TagsClickListener() {
-            @Override
-            public void onItemClicked(Object item) {
-              Person p = (Person) item;
-            }
-        });
+      @Override
+      public void onItemClicked(Object item) {
+          Person p = (Person) item;
+      }
+});
 ```
 - **Item selection event**. 
 
@@ -230,11 +230,11 @@ Setting up item selection listener. From version 1.1.1 selection callback is ret
 
 ```java
 HashtagView.addOnTagSelectListener(new HashtagView.TagsSelectListener() {
-            @Override
-            public void onItemSelected(Object item, boolean selected) {
-              Person p = (Person) item;
-            }
-        });
+      @Override
+      public void onItemSelected(Object item, boolean selected) {
+          Person p = (Person) item;
+      }
+});
 ```
 Both callbacks returns object of corresponding type defined in `HashtagView.setData()` method. To get list of all selected items call `HashtagView.getSelectedItems()`. Also only one listener can be used at a time, i.e. if widget is in `selectionMode`  then `HashtagView.TagsSelectListener` will handle click events, but not `HashtagView.TagsClickListener`. 
 
