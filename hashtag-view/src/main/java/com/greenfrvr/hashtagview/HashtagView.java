@@ -235,7 +235,7 @@ public class HashtagView extends LinearLayout {
         if (!isDynamic) return false;
 
         ItemData itemData = new ItemData<>(item);
-        if (viewMap.values().contains(itemData)) return false;
+        if (viewMap != null && viewMap.values().contains(itemData)) return false;
 
         if (viewMap != null) {
             data.addAll(viewMap.values());
