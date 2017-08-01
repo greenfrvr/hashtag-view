@@ -134,6 +134,8 @@ public class HashtagView extends LinearLayout {
     private Typeface typeface;
 
     private float totalItemsWidth;
+    private int selectionLimit = -1;
+    private int selectedItemsCount = 0;
 
     private boolean isInSelectMode;
     private boolean isDynamic;
@@ -251,7 +253,7 @@ public class HashtagView extends LinearLayout {
      * Dynamically removes given item from a widget if it is already presented in a widget.
      *
      * @param item Object representing item to be removed
-     * @param <T> Custom data model class
+     * @param <T>  Custom data model class
      * @return true if item was removed successfully, false otherwise (for example there
      * was no item to remove)
      */
@@ -287,8 +289,7 @@ public class HashtagView extends LinearLayout {
     public List<Object> getSelectedItems() {
         List<Object> selected = new ArrayList<>();
         for (ItemData item : viewMap.values()) {
-            if (item.isSelected)
-                selected.add(item.data);
+            if (item.isSelected) selected.add(item.data);
         }
         return selected;
     }
@@ -349,6 +350,23 @@ public class HashtagView extends LinearLayout {
 
         if (selectListeners != null) {
             selectListeners.clear();
+        }
+    }
+
+
+    public int getSelectionLimit() {
+        return selectionLimit;
+    }
+
+    public void setSelectionLimit(int selectionLimit) {
+        this.selectionLimit = selectionLimit > 0 ? selectionLimit : -1;
+
+        if (viewMap != null) {
+            for (ItemData item : viewMap.values()) {
+                item.isSelected = false;
+                item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
+                item.decorateText(transformer);
+            }
         }
     }
 
@@ -585,7 +603,16 @@ public class HashtagView extends LinearLayout {
 
     private void setItemPreselected(ItemData item) {
         if (isInSelectMode) {
-            item.isSelected = selector.preselect(item.data);
+            boolean selection = selector.preselect(item.data);
+            if (selection) {
+                if (selectionLimit == -1 || selectedItemsCount < selectionLimit) {
+                    selectedItemsCount += 1;
+                } else {
+                    return;
+                }
+            }
+            item.isSelected = selection;
+
             item.decorateText(transformer);
             item.displaySelection(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
         }
@@ -776,6 +803,16 @@ public class HashtagView extends LinearLayout {
     }
 
     private void handleSelection(ItemData item) {
+        if (item.isSelected) {
+            selectedItemsCount -= 1;
+        } else {
+            if (selectionLimit == -1 || selectedItemsCount < selectionLimit) {
+                selectedItemsCount += 1;
+            } else {
+                return;
+            }
+        }
+
         item.select(leftDrawable, leftSelectedDrawable, rightDrawable, rightSelectedDrawable);
         item.decorateText(transformer);
 
