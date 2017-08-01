@@ -18,8 +18,31 @@ import butterknife.OnClick;
  */
 public abstract class BaseFragment extends Fragment {
 
+    static public class Obj {
+
+        public String name;
+        public int number;
+
+        public Obj(String name) {
+            this.name = name;
+            this.number = name.length();
+        }
+
+        @Override
+        public String toString() {
+            return "Obj{" +
+                    "name='" + name + '\'' +
+                    ", number=" + number +
+                    '}';
+        }
+    }
+
     public static final List<String> DATA = Arrays.asList("android", "library", "collection",
             "hashtags", "min14sdk", "UI", "view", "github", "opensource", "project", "widget");
+
+    public static final List<Obj> DATA1 = Arrays.asList(new Obj("android"), new Obj("library"), new Obj("collection"),
+            new Obj("hashtags"), new Obj("min14sdk"), new Obj("UI"), new Obj("view"), new Obj("github"),
+            new Obj("opensource"), new Obj("project"), new Obj("widget"));
 
     public static final List<String> TAGS = Arrays.asList("cupcake", "donut", "eclair", "froyo",
             "gingerbread", "honeycomb", "icecreamsandwich", "jellybean", "kitkat", "lollipop", "marshmallow");

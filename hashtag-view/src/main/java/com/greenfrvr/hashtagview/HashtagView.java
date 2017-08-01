@@ -169,6 +169,19 @@ public class HashtagView extends LinearLayout {
         data = new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getData() {
+        List<T> list = new ArrayList<>();
+
+        if (viewMap != null && !viewMap.isEmpty()) {
+            for (ItemData itemData : viewMap.values()) {
+                list.add(((T) itemData.data));
+            }
+        }
+
+        return list;
+    }
+
     /**
      * Method defines data as simple {@link java.lang.String} array. Using this method makes not
      * possible to use {@link android.text.Spannable} for representing items label.
@@ -286,11 +299,16 @@ public class HashtagView extends LinearLayout {
     /**
      * @return List of selected items. Consists of objects corresponding to custom data model defined by setData() method
      */
-    public List<Object> getSelectedItems() {
-        List<Object> selected = new ArrayList<>();
-        for (ItemData item : viewMap.values()) {
-            if (item.isSelected) selected.add(item.data);
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getSelectedItems() {
+        List<T> selected = new ArrayList<>();
+
+        if (viewMap != null && !viewMap.isEmpty()) {
+            for (ItemData item : viewMap.values()) {
+                if (item.isSelected) selected.add((T) item.data);
+            }
         }
+
         return selected;
     }
 
