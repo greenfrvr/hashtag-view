@@ -40,6 +40,7 @@
             <enum name="middle" value="1"/>
             <enum name="right" value="2"/>
             <enum name="random" value="3"/>
+            <enum name="none" value="4"/>
         </attr>
         <attr name="rowMode" format="enum">
             <enum name="wrap" value="0"/>
@@ -49,6 +50,10 @@
         <attr name="rowsQuantity" format="integer"/>
         <attr name="selectionMode" format="boolean"/>
         <attr name="dynamicMode" format="boolean"/>
+        <attr name="composeMode" format="enum">
+            <enum name="origin" value="0"/>
+            <enum name="linear" value="1"/>
+        </attr>
     </declare-styleable>
 
 </resources>

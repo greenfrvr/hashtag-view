@@ -13,6 +13,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -33,7 +34,6 @@ import com.google.common.collect.Multimap;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -64,7 +64,7 @@ public class HashtagView extends LinearLayout {
     public static final int MODE_STRETCH = 1;
     public static final int MODE_EQUAL = 2;
 
-    @IntDef({DISTRIBUTION_LEFT, DISTRIBUTION_MIDDLE, DISTRIBUTION_RIGHT, DISTRIBUTION_RANDOM})
+    @IntDef({DISTRIBUTION_LEFT, DISTRIBUTION_MIDDLE, DISTRIBUTION_RIGHT, DISTRIBUTION_RANDOM, DISTRIBUTION_NONE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface RowDistribution {
     }
@@ -73,6 +73,7 @@ public class HashtagView extends LinearLayout {
     public static final int DISTRIBUTION_MIDDLE = 1;
     public static final int DISTRIBUTION_RIGHT = 2;
     public static final int DISTRIBUTION_RANDOM = 3;
+    public static final int DISTRIBUTION_NONE = 4;
 
     @IntDef({ELLIPSIZE_START, ELLIPSIZE_MIDDLE, ELLIPSIZE_END, ELLIPSIZE_MARQUEE})
     @Retention(RetentionPolicy.SOURCE)
@@ -83,6 +84,14 @@ public class HashtagView extends LinearLayout {
     public static final int ELLIPSIZE_MIDDLE = 1;
     public static final int ELLIPSIZE_END = 2;
     public static final int ELLIPSIZE_MARQUEE = 3;
+
+    @IntDef({COMPOSE_ORIGIN, COMPOSE_LINEAR})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Compose {
+    }
+
+    public static final int COMPOSE_ORIGIN = 0;
+    public static final int COMPOSE_LINEAR = 1;
 
     private static final SparseArray<TextUtils.TruncateAt> ellipsizeList = new SparseArray<>(4);
 
@@ -124,6 +133,7 @@ public class HashtagView extends LinearLayout {
     private int rowDistribution;
     private int rowMode;
     private int rowCount;
+    private int composeMode;
     private int backgroundDrawable;
     private int foregroundDrawable;
     private int leftDrawable;
@@ -143,6 +153,8 @@ public class HashtagView extends LinearLayout {
     private DataTransform transformer = DefaultTransform.newInstance();
     private DataSelector selector = DefaultSelector.newInstance();
 
+    private ComposeHelper composeHelper;
+
     private final ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         @Override
         public boolean onPreDraw() {
@@ -156,19 +168,26 @@ public class HashtagView extends LinearLayout {
         }
     };
 
-    public HashtagView(Context context, AttributeSet attrs) {
+    public HashtagView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
         setOrientation(VERTICAL);
         setGravity(Gravity.CENTER_HORIZONTAL);
 
         extractAttributes(attrs);
         prepareLayoutParams();
         prepareLayoutTransition();
+        prepareComposeHelper();
 
         widthList = new ArrayList<>();
         data = new ArrayList<>();
     }
 
+    /**
+     * Method returns data that was set previously for that view.
+     *
+     * @return list of original data items
+     */
     @SuppressWarnings("unchecked")
     public <T> List<T> getData() {
         List<T> list = new ArrayList<>();
@@ -475,6 +494,11 @@ public class HashtagView extends LinearLayout {
         this.rowDistribution = rowDistribution;
     }
 
+    public void setComposeMode(@Compose int composeMode) {
+        this.composeMode = composeMode;
+        prepareComposeHelper();
+    }
+
     public void setRowCount(int count) {
         if (count >= 0) this.rowCount = count;
     }
@@ -540,9 +564,10 @@ public class HashtagView extends LinearLayout {
             itemTextGravity = a.getInt(R.styleable.HashtagView_tagTextGravity, Gravity.CENTER);
             itemTextEllipsize = a.getInt(R.styleable.HashtagView_tagEllipsize, ELLIPSIZE_END);
             rowGravity = a.getInt(R.styleable.HashtagView_rowGravity, Gravity.CENTER);
-            rowDistribution = a.getInt(R.styleable.HashtagView_rowDistribution, DISTRIBUTION_RANDOM);
+            rowDistribution = a.getInt(R.styleable.HashtagView_rowDistribution, DISTRIBUTION_NONE);
             rowMode = a.getInt(R.styleable.HashtagView_rowMode, MODE_WRAP);
             rowCount = a.getInt(R.styleable.HashtagView_rowsQuantity, 0);
+            composeMode = a.getInt(R.styleable.HashtagView_composeMode, COMPOSE_ORIGIN);
 
             backgroundDrawable = a.getResourceId(R.styleable.HashtagView_tagBackground, 0);
             foregroundDrawable = a.getResourceId(R.styleable.HashtagView_tagForeground, 0);
@@ -585,6 +610,17 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    private void prepareComposeHelper() {
+        switch (composeMode) {
+            case COMPOSE_ORIGIN:
+                composeHelper = new OriginalComposer();
+                break;
+            case COMPOSE_LINEAR:
+                composeHelper = new LinearComposer();
+                break;
+        }
+    }
+
     private boolean isPrepared() {
         return getViewWidth() > 0 || rowCount > 0;
     }
@@ -600,8 +636,7 @@ public class HashtagView extends LinearLayout {
             totalItemsWidth += item.width;
         }
 
-        Collections.sort(data);
-        Collections.sort(widthList, Collections.reverseOrder());
+        composeHelper.prepareData();
     }
 
     private void wrapItem(ItemData item) {
@@ -644,37 +679,16 @@ public class HashtagView extends LinearLayout {
         final int[] rowWidths = new int[sortState.totalRows()];
         viewMap = ArrayListMultimap.create(sortState.totalRows(), data.size());
 
-        sortingLoop(0, sortState.rowCount, rowWidths, true);
+        composeHelper.sortingLoop(0, sortState.rowCount, rowWidths, true);
 
         if (sortState.hasExtraRows) {
-            sortingLoop(sortState.rowCount, sortState.totalRows(), rowWidths, false);
+            composeHelper.sortingLoop(sortState.rowCount, sortState.totalRows(), rowWidths, false);
             sortState.release();
         }
     }
 
     private boolean extraCondition() {
         return !(sortState.hasExtraRows && data.size() == sortState.extraCount);
-    }
-
-    private void sortingLoop(int start, int end, int[] widths, boolean hasExtra) {
-        while (!data.isEmpty() && (!hasExtra || extraCondition())) {
-            iteration:
-
-            for (int i = start; i < end; i++) {
-                Iterator<ItemData> iterator = data.iterator();
-
-                while (iterator.hasNext()) {
-                    ItemData item = iterator.next();
-                    if (rowCount > 0 || widths[i] + item.width <= getViewWidth()) {
-                        widths[i] += item.width;
-                        viewMap.put(i, item);
-                        iterator.remove();
-
-                        if (hasExtra) continue iteration;
-                    }
-                }
-            }
-        }
     }
 
     private void draw() {
@@ -719,6 +733,8 @@ public class HashtagView extends LinearLayout {
             case DISTRIBUTION_RANDOM:
                 Collections.shuffle((List) list);
                 break;
+            case DISTRIBUTION_NONE:
+                break;
         }
     }
 
@@ -755,31 +771,7 @@ public class HashtagView extends LinearLayout {
             return;
         }
 
-        int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
-        int[] rowsWidth = new int[rows];
-        int iterationLimit = rows + widthList.size();
-        int counter = 0;
-
-        sortState.preserveState(rows);
-        while (!widthList.isEmpty()) {
-            rowIteration:
-            for (int i = 0; i < rows; i++) {
-                if (counter > iterationLimit) {
-                    sortState.preserveState(rows, true, widthList.size());
-                    widthList.clear();
-                    return;
-                }
-
-                counter++;
-                for (Float item : widthList) {
-                    if (rowsWidth[i] + item <= getViewWidth()) {
-                        rowsWidth[i] += item;
-                        widthList.remove(item);
-                        continue rowIteration;
-                    }
-                }
-            }
-        }
+        composeHelper.evaluateRowsQuantity();
     }
 
     private View inflateItemView(final ItemData item) {
@@ -849,6 +841,117 @@ public class HashtagView extends LinearLayout {
         }
     }
 
+    private class OriginalComposer implements ComposeHelper {
+
+        @Override
+        public void prepareData() {
+            Collections.sort(data);
+            Collections.sort(widthList, Collections.reverseOrder());
+        }
+
+        @Override
+        public void evaluateRowsQuantity() {
+            int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
+            int[] rowsWidth = new int[rows];
+            int iterationLimit = rows + widthList.size();
+            int counter = 0;
+
+            sortState.preserveState(rows);
+            while (!widthList.isEmpty()) {
+                rowIteration:
+                for (int i = 0; i < rows; i++) {
+                    if (counter > iterationLimit) {
+                        sortState.preserveState(rows, true, widthList.size());
+                        widthList.clear();
+                        return;
+                    }
+
+                    counter++;
+                    for (Float item : widthList) {
+                        if (rowsWidth[i] + item <= getViewWidth()) {
+                            rowsWidth[i] += item;
+                            widthList.remove(item);
+                            continue rowIteration;
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void sortingLoop(int start, int end, int[] widths, boolean hasExtra) {
+            while (!data.isEmpty() && (!hasExtra || extraCondition())) {
+                iteration:
+
+                for (int i = start; i < end; i++) {
+                    Iterator<ItemData> iterator = data.iterator();
+
+                    while (iterator.hasNext()) {
+                        ItemData item = iterator.next();
+                        if (rowCount > 0 || widths[i] + item.width <= getViewWidth()) {
+                            widths[i] += item.width;
+                            viewMap.put(i, item);
+                            iterator.remove();
+
+                            if (hasExtra) continue iteration;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private class LinearComposer implements ComposeHelper {
+
+        @Override
+        public void prepareData() {
+        }
+
+        @Override
+        public void evaluateRowsQuantity() {
+            int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
+            int[] rowsWidth = new int[rows];
+            int rowsCounter = 0;
+
+            sortState.preserveState(rows);
+
+            Iterator<Float> it = widthList.iterator();
+            while (it.hasNext()) {
+                Float item = it.next();
+                if (rowsWidth[rowsCounter] + item > getViewWidth()) rowsCounter++;
+
+                rowsWidth[rowsCounter] += item;
+                it.remove();
+            }
+
+            sortState.preserveState(rowsCounter + 1);
+        }
+
+        @Override
+        public void sortingLoop(int start, int end, int[] widths, boolean hasExtra) {
+            if (data.isEmpty()) return;
+
+            Iterator<ItemData> it = data.iterator();
+            int index = start;
+            while (it.hasNext()) {
+                ItemData item = it.next();
+                if (widths[index] + item.width > getViewWidth()) index++;
+
+                widths[index] += item.width;
+                viewMap.put(index, item);
+                it.remove();
+            }
+        }
+    }
+
+    private interface ComposeHelper {
+        void prepareData();
+
+        void evaluateRowsQuantity();
+
+        void sortingLoop(int start, int end, int[] widths, boolean hasExtra);
+    }
+
     /**
      * Listener used to handle item click events.
      */
@@ -890,30 +993,30 @@ public class HashtagView extends LinearLayout {
         boolean preselect(T item);
     }
 
-    static class SortState {
+    private static class SortState {
         boolean hasExtraRows = false;
         int extraCount = 0;
         int rowCount = 0;
 
-        public static SortState initState() {
+        static SortState initState() {
             return new SortState();
         }
 
-        public int totalRows() {
+        int totalRows() {
             return (hasExtraRows ? extraCount : 0) + rowCount;
         }
 
-        public void preserveState(int rowCount, boolean needsExtraRow, int extraCount) {
+        void preserveState(int rowCount, boolean needsExtraRow, int extraCount) {
             this.rowCount = rowCount;
             this.hasExtraRows = needsExtraRow;
             this.extraCount = extraCount;
         }
 
-        public void preserveState(int rowCount) {
+        void preserveState(int rowCount) {
             preserveState(rowCount, false, 0);
         }
 
-        public void release() {
+        void release() {
             preserveState(0);
         }
     }
