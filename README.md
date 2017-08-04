@@ -1,5 +1,5 @@
 # HashtagView
-### Version 1.2.1 available! 
+### Version 1.3.0 available! 
 
 [![Join the chat at https://gitter.im/greenfrvr/hashtag-view](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/greenfrvr/hashtag-view?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -26,7 +26,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.2.1'
+    compile 'com.github.greenfrvr:hashtag-view:1.3.0'
 }
 ```
 
@@ -34,7 +34,7 @@ or
 
 ```Gradle
 dependencies {
-    compile ('com.github.greenfrvr:hashtag-view:1.2.1@aar'){
+    compile ('com.github.greenfrvr:hashtag-view:1.3.0@aar'){
         transitive=true
     }
 }
@@ -84,6 +84,7 @@ HashtagView.setData(persons, new HashtagView.DataTransform<Person>() {
 });
 ```
 As you may notice implementing `DataTransform.prepare()` method let you define `Spannable` representation of each item.<br/>
+To retrieve list of all data items call `HashtagView.getData()`.  
 3. If you use widget in `selectionMode` and you want some items to be preselected, then you can use `HashtagViewsetData(List<T> list, DataTransform<T> transformer, DataSelector<T> selector)` method.
 <br/>This method works just like previous one, but additional interface `DataSelector` allows you to specify which items should be in selected state, before user can select something. 
 For example to select each second item it can be implemented like this:
@@ -119,6 +120,8 @@ HashtagView.DataTransform<String> stateTransform = new HashtagView.DataStateTran
       }
 };
 ```
+
+You can limit amount of selected items at a time by calling `setSelectionLimit(int limit);` method. Setting value to zero or less than zero will remove selection limit.
 
 ## Customizing
 All attributes can be defined in layout .xml file or programmatically. Below is a list of available attributes.
@@ -193,6 +196,7 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
         <enum name="middle" value="1"/>
         <enum name="right" value="2"/>
         <enum name="random" value="3"/>
+        <enum name="none" value="4"/>
     </attr>
     <!-- Defines if each item will wrap its content, or widget will fill all given width. -->
     <attr name="rowMode" format="enum">
@@ -206,6 +210,11 @@ All attributes can be defined in layout .xml file or programmatically. Below is 
     <attr name="selectionMode" format="boolean"/>
     <!-- Enables dynamic mode (allows to add/remove items dynamically). -->
     <attr name="dynamicMode" format="boolean"/>
+    <!-- Changes items positioning implementation algorythm. -->
+    <attr name="composeMode" format="enum">
+        <enum name="origin" value="0"/>
+        <enum name="linear" value="1"/>
+    </attr>
 ```
 Also you can set up custom typeface by `HashtagView.setTypeface(Typeface)`.
 If you want to use some `<selector>` backgrounds you can set `tagBackground` property, `tagForeground` property can be used in case if you want to use `<ripple>` drawables.
