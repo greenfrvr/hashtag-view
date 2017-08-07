@@ -909,35 +909,24 @@ public class HashtagView extends LinearLayout {
 
         @Override
         public void evaluateRowsQuantity() {
-            int rows = (int) Math.ceil(totalItemsWidth / getViewWidth());
-            int[] rowsWidth = new int[rows];
-            int rowsCounter = 0;
-
-            sortState.preserveState(rows);
-
-            Iterator<Float> it = widthList.iterator();
-            while (it.hasNext()) {
-                Float item = it.next();
-                if (rowsWidth[rowsCounter] + item > getViewWidth()) rowsCounter++;
-
-                rowsWidth[rowsCounter] += item;
-                it.remove();
-            }
-
-            sortState.preserveState(rowsCounter + 1);
         }
 
         @Override
         public void sortingLoop(int start, int end, int[] widths, boolean hasExtra) {
             if (data.isEmpty()) return;
 
-            Iterator<ItemData> it = data.iterator();
+            int rowWidth = 0;
             int index = start;
+            Iterator<ItemData> it = data.iterator();
+
             while (it.hasNext()) {
                 ItemData item = it.next();
-                if (widths[index] + item.width > getViewWidth()) index++;
+                if (rowWidth + item.width > getViewWidth()) {
+                    index++;
+                    rowWidth = 0;
+                }
 
-                widths[index] += item.width;
+                rowWidth += item.width;
                 viewMap.put(index, item);
                 it.remove();
             }
