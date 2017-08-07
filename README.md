@@ -1,5 +1,5 @@
 # HashtagView
-### Version 1.3.0 available! 
+### Version 1.3.1 available! 
 
 [![Join the chat at https://gitter.im/greenfrvr/hashtag-view](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/greenfrvr/hashtag-view?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -26,7 +26,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```Gradle 
 dependencies {
-    compile 'com.github.greenfrvr:hashtag-view:1.3.0'
+    compile 'com.github.greenfrvr:hashtag-view:1.3.1'
 }
 ```
 
@@ -34,7 +34,7 @@ or
 
 ```Gradle
 dependencies {
-    compile ('com.github.greenfrvr:hashtag-view:1.3.0@aar'){
+    compile ('com.github.greenfrvr:hashtag-view:1.3.1@aar'){
         transitive=true
     }
 }
@@ -257,3 +257,20 @@ To be able add and remove tags dynamically you should set dynamic mode to `true`
 returns true if item added successfully, false if item can't be added (in case `HastagView` already contains such item)
 - `HastagView.removeItem()`
 returns true if item removed successfully, false if item can't be removed (in case `HashtagView` doesn't contain such item)
+
+## Distribution mode
+Distribution mode is responsible for sorting items by width inside each row. There are 5 different distribution modes available:
+- `RowDistribution.DISTRIBUTION_LEFT` wider items are on the left side of a row
+- `RowDistribution.DISTRIBUTION_MIDDLE` wider items are in the middle of a row
+- `RowDistribution.DISTRIBUTION_RIGHT` wider items are on the right side of a row
+- `RowDistribution.DISTRIBUTION_RANDOM` items are placed randomly inside a row
+- `RowDistribution.DISTRIBUTION_NONE` no sorting is applied
+
+Default distribution mode is `DISTRIBUTION_NONE`. You can change it either via xml attributes or programmatically.
+
+## Compose mode
+There are 2 different implementations of item positioning algorythms available:
+- `Compose.COMPOSE_ORIGIN` represents implementation of versions `1.2.1` and below. The idea of that implementation is to make all rows look even. It is achieved by sorting items by single item views width and putting items to rows according to greedy algorithm. This compose mode will change order of incoming items. 
+- `Compose.COMPOSE_LINEAR` is available since version `1.3.0` implementation. It puts items in a row one by one until row is fullfiled, then next rows will be filled by the same rule. Using this compose mode with `RowDistribution.DISTRIBUTION_NONE` distribution option saves incoming items order as is.
+
+Default compose mode is `COMPOSE_ORIGIN`. You can change it either via xml attributes or programmatically.     
