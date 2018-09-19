@@ -305,6 +305,22 @@ public class HashtagView extends LinearLayout {
     }
 
     /**
+     * Dynamically removes all previously added items from a widget.
+     *
+     * @return true if item was removed successfully, false otherwise (for example there
+     * was no item to remove)
+     */
+    public boolean removeAll() {
+        if (!isDynamic || viewMap == null || viewMap.isEmpty()) return false;
+
+        data.clear();
+        viewMap.clear();
+        removeAllViews();
+
+        return true;
+    }
+
+    /**
      * @param transformer Implementation of {@link com.greenfrvr.hashtagview.HashtagView.DataTransform} or
      *                    {@link com.greenfrvr.hashtagview.HashtagView.DataStateTransform}
      *                    interface. Can be used for building label from several custom data model
